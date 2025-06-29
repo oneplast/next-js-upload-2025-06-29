@@ -27,4 +27,8 @@ public class AppConfig {
     public static boolean isNotProd() {
         return true;
     }
+
+    public static String getTempDirPath() {
+        return System.getProperty("java.io.tmpdir");
+    }
 }

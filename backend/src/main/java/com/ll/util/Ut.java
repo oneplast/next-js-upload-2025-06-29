@@ -4,17 +4,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ll.global.app.AppConfig;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
+import java.net.http.HttpClient.Redirect;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.security.Key;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import javax.crypto.SecretKey;
 import lombok.SneakyThrows;
@@ -81,46 +84,79 @@ public class Ut {
     }
 
     public static class file {
-        public static void downloadByHttp(String url, String dirPath) {
-            try {
-                HttpClient client = HttpClient.newBuilder()
-                        .followRedirects(HttpClient.Redirect.NORMAL)
-                        .build();
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
-                        .GET()
-                        .build();
-                // 먼저 헤더만 가져오기 위한 HEAD 요청
-                HttpResponse<Void> headResponse = client.send(
-                        HttpRequest.newBuilder(URI.create(url))
-                                .method("HEAD", HttpRequest.BodyPublishers.noBody())
-                                .build(),
-                        HttpResponse.BodyHandlers.discarding()
-                );
-                // 실제 파일 다운로드
-                HttpResponse<Path> response = client.send(request,
-                        HttpResponse.BodyHandlers.ofFile(
-                                createTargetPath(url, dirPath, headResponse)
-                        ));
-            } catch (IOException | InterruptedException e) {
-                throw new RuntimeException("다운로드 중 오류 발생: " + e.getMessage(), e);
-            }
+        private static final Map<String, String> MIME_TYPE_MAP = new LinkedHashMap<>() {{
+            put("application/json", "json");
+            put("text/plain", "txt");
+            put("text/html", "html");
+            put("text/css", "css");
+            put("application/javascript", "js");
+            put("image/jpeg", "jpg");
+            put("image/png", "png");
+            put("image/gif", "gif");
+            put("image/webp", "webp");
+            put("image/svg+xml", "svg");
+            put("application/pdf", "pdf");
+            put("application/xml", "xml");
+            put("application/zip", "zip");
+            put("application/gzip", "gz");
+            put("application/x-tar", "tar");
+            put("application/x-7z-compressed", "7z");
+            put("application/vnd.rar", "rar");
+            put("audio/mpeg", "mp3");
+            put("audio/wav", "wav");
+            put("video/mp4", "mp4");
+            put("video/webm", "webm");
+            put("video/x-msvideo", "avi");
+        }};
+
+        @SneakyThrows
+        public static String downloadByHttp(String url, String dirPath) {
+            HttpClient client = HttpClient.newBuilder()
+                    .followRedirects(Redirect.ALWAYS)
+                    .build();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .GET()
+                    .build();
+
+            String tempFilePath = dirPath + "/" + UUID.randomUUID() + ".tmp";
+
+            Ut.file.mkdir(dirPath);
+
+            // 실제 파일 다운로드
+            HttpResponse<Path> response = client.send(
+                    request,
+                    HttpResponse.BodyHandlers.ofFile(Path.of(tempFilePath))
+            );
+
+            // 파일 확장자 추출
+            String extension = getExtensionFromResponse(response);
+
+            // 파일명 추출
+            String filename = getFilenameFromUrl(url);
+
+            String newFilePath = dirPath + "/" + filename + "." + extension;
+
+            mv(tempFilePath, newFilePath);
+
+            return newFilePath;
         }
 
-        private static Path createTargetPath(String url, String dirPath, HttpResponse<?> response) {
-            // 디렉토리가 없으면 생성
-            Path directory = Path.of(dirPath);
-            if (!Files.exists(directory)) {
-                try {
-                    Files.createDirectories(directory);
-                } catch (IOException e) {
-                    throw new RuntimeException("디렉토리 생성 실패: " + e.getMessage(), e);
-                }
+        @SneakyThrows
+        private static void mv(String oldFilePath, String newFilePath) {
+            Files.move(Path.of(oldFilePath), Path.of(newFilePath), StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        @SneakyThrows
+        private static void mkdir(String dirPath) {
+            Path path = Path.of(dirPath);
+
+            if (Files.exists(path)) {
+                return;
             }
-            // 파일명 생성
-            String filename = getFilenameFromUrl(url);
-            String extension = getExtensionFromResponse(response);
-            return directory.resolve(filename + extension);
+
+            Files.createDirectories(path);
         }
 
         private static String getFilenameFromUrl(String url) {
@@ -140,29 +176,19 @@ public class Ut {
         private static String getExtensionFromResponse(HttpResponse<?> response) {
             return response.headers()
                     .firstValue("Content-Type")
-                    .map(contentType -> {
-                        // MIME 타입에 따른 확장자 매핑
-                        return switch (contentType.split(";")[0].trim().toLowerCase()) {
-                            case "application/json" -> ".json";
-                            case "text/plain" -> ".txt";
-                            case "text/html" -> ".html";
-                            case "image/jpeg" -> ".jpg";
-                            case "image/png" -> ".png";
-                            case "application/pdf" -> ".pdf";
-                            case "application/xml" -> ".xml";
-                            case "application/zip" -> ".zip";
-                            default -> "";
-                        };
-                    })
-                    .orElse("");
+                    .map(contentType -> MIME_TYPE_MAP.getOrDefault(contentType, "tmp"))
+                    .orElse("tmp");
+        }
+
+        @SneakyThrows
+        public static void delete(String filePath) {
+            Files.deleteIfExists(Path.of(filePath));
         }
     }
 
     public static class cmd {
         public static void runAsync(String cmd) {
-            new Thread(() -> {
-                run(cmd);
-            }).start();
+            new Thread(() -> run(cmd)).start();
         }
 
         public static void run(String cmd) {

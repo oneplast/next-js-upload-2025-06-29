@@ -43,3 +43,4 @@ apiV1.json
 src/main/generated
 src/main/resources/application-secret.yml
 apiV1
+*.tmp
