@@ -1,0 +1,83 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: next-js-upload-2025-06-29
+  profiles:
+    active: dev
+    include: secret
+  web:
+    resources:
+      add-mappings: false
+  output:
+    ansi:
+      enabled: always
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+  datasource:
+    url: jdbc:h2:./db_dev;MODE=MySQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    #    url: jdbc:mysql://localhost:3306/restByTdd_dev
+    #    username: root
+    #    password: lldj123414
+    #    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      auto-commit: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+        format_sql: true
+        highlight-sql: true
+        use_sql_comments: true
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            clientId: ON_SECRET
+            scope: profile_nickname, profile_image
+            client-name: kakao
+            authorization-grant-type: authorization_code
+            redirect-uri: ${custom.site.backUrl}/{action}/oauth2/code/{registrationId}
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+springdoc:
+  default-produces-media-type: "application/json;charset=utf-8"
+logging:
+  level:
+    org.hibernate.sql: debug
+    org.hibernate.orm.jdbc.bind: trace
+    org.hibernate.orm.jdbc.extract: trace
+    org.springframework.transaction.interceptor: trace
+custom:
+  notProdMembers:
+    - username: KAKAO__3945822555
+      nickname: 민경훈
+      profileImgUrl: http://k.kakaocdn.net/dn/ch7qk8/btrN68cuqOC/dw98gILEDSQevAp2hXCzW0/img_640x640.jpg
+  dev:
+    cookieDomain: localhost
+    frontUrl: "http://${custom.dev.cookieDomain}:3000"
+    backUrl: "http://${custom.dev.cookieDomain}:${server.port}"
+  prod:
+    cookieDomain: glog.oa.gg
+    frontUrl: "https://www.${custom.prod.cookieDomain}"
+    backUrl: "https://api.${custom.prod.cookieDomain}"
+  site:
+    cookieDomain: "${custom.dev.cookieDomain}"
+    frontUrl: "${custom.dev.frontUrl}"
+    backUrl: "${custom.dev.backUrl}"
+    name: GLOG
+  jwt:
+    secretKey: ON_SECRET
+  accessToken:
+    expirationSeconds: "#{60 * 20}"

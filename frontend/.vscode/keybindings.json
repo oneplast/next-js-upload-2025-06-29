@@ -1,0 +1,6 @@
+[
+  {
+    "key": "ctrl+y",
+    "command": "github.copilot.toggleCopilot"
+  }
+]
