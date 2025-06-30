@@ -2,6 +2,7 @@ package com.ll.global.app;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,14 @@ public class AppConfig {
     @Autowired
     public void setObjectMapper(ObjectMapper objectMapper) {
         AppConfig.objectMapper = objectMapper;
+    }
+
+    @Getter
+    private static Tika tika;
+
+    @Autowired
+    public void setTika(Tika tika) {
+        AppConfig.tika = tika;
     }
 
     @Getter
