@@ -2,6 +2,7 @@ package com.ll.domain.post.post.entity;
 
 import com.ll.domain.member.member.entity.Member;
 import com.ll.domain.post.comment.entity.PostComment;
+import com.ll.domain.post.genFile.entity.PostGenFile;
 import com.ll.global.dto.Empty;
 import com.ll.global.exceptions.ServiceException;
 import com.ll.global.jpa.entity.BaseTime;
@@ -40,6 +41,10 @@ public class Post extends BaseTime {
     @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @Builder.Default
     private List<PostComment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @Builder.Default
+    private List<PostGenFile> genFiles = new ArrayList<>();
 
     private boolean published;
 
@@ -143,5 +148,15 @@ public class Post extends BaseTime {
                 .ifPresent(rsData -> {
                     throw new ServiceException(rsData.getResultCode(), rsData.getMsg());
                 });
+    }
+
+    public void addGenFile(String typeCode, String filePath) {
+        PostGenFile genFile = PostGenFile.builder()
+                .post(this)
+                .typeCode(typeCode)
+                .filePath(filePath)
+                .build();
+
+        genFiles.add(genFile);
     }
 }

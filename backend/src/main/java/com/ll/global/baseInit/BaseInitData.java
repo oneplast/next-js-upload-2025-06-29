@@ -6,6 +6,7 @@ import com.ll.domain.post.post.entity.Post;
 import com.ll.domain.post.post.service.PostService;
 import com.ll.global.app.AppConfig;
 import com.ll.global.app.CustomConfigProperties;
+import com.ll.util.Ut;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,14 +115,17 @@ public class BaseInitData {
         Post post2 = postService.write(memberUser1, "배구 하실 분?", "15시 까지 12명을 모아야 합니다.", true, true);
         post2.addComment(memberUser4, "저요!, 저 배구 잘합니다.");
 
-        postService.write(memberUser2, "농구 하실 분?", "16시 까지 10명을 모아야 합니다.", true, true);
-        postService.write(memberUser3, "발야구 하실 분?", "17 시까지 14명을 모아야 합니다.", true, true);
-        postService.write(memberUser4, "피구 하실 분?", "18시 까지 18명을 모아야 합니다.", true, true);
-        postService.write(memberUser4, "발야구를 밤에 하실 분?", "22시 까지 18명을 모아야 합니다.", false, false);
-        postService.write(memberUser4, "발야구를 새벽 1시에 하실 분?", "새벽 1시 까지 17명을 모아야 합니다."
+        Post post3 = postService.write(memberUser2, "농구 하실 분?", "16시 까지 10명을 모아야 합니다.", true, true);
+        Post post4 = postService.write(memberUser3, "발야구 하실 분?", "17 시까지 14명을 모아야 합니다.", true, true);
+        Post post5 = postService.write(memberUser4, "피구 하실 분?", "18시 까지 18명을 모아야 합니다.", true, true);
+        Post post6 = postService.write(memberUser4, "발야구를 밤에 하실 분?", "22시 까지 18명을 모아야 합니다.", false, false);
+        Post post7 = postService.write(memberUser4, "발야구를 새벽 1시에 하실 분?", "새벽 1시 까지 17명을 모아야 합니다."
                 , true, false);
-        postService.write(memberUser4, "발야구를 새벽 3시에 하실 분?", "새벽 3시 까지 19명을 모아야 합니다."
+        Post post8 = postService.write(memberUser4, "발야구를 새벽 3시에 하실 분?", "새벽 3시 까지 19명을 모아야 합니다."
                 , false, true);
+
+        String newFilePath = Ut.file.downloadByHttp("https://picsum.photos/id/237/200/300", AppConfig.getTempDirPath());
+        post8.addGenFile("attachment", newFilePath);
 
         IntStream.rangeClosed(9, 100).forEach(
                 i -> postService.write(
