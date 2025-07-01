@@ -84,6 +84,8 @@ public class Ut {
     }
 
     public static class file {
+        private static final String ORIGINAL_FILE_NAME_SEPARATOR = "--originalFileName__";
+
         private static final Map<String, String> MIME_TYPE_MAP = new LinkedHashMap<>() {{
             put("application/json", "json");
             put("text/plain", "txt");
@@ -110,7 +112,7 @@ public class Ut {
         }};
 
         @SneakyThrows
-        public static String downloadByHttp(String url, String dirPath) {
+        public static String downloadByHttp(String url, String dirPath, boolean uniqueFilename) {
             HttpClient client = HttpClient.newBuilder()
                     .followRedirects(Redirect.ALWAYS)
                     .build();
@@ -138,7 +140,11 @@ public class Ut {
             }
 
             // 파일명 추출
-            String filename = getFilenameFromUrl(url);
+            String filename = getFilenameWithoutFromUrl(url);
+
+            filename = uniqueFilename
+                    ? UUID.randomUUID() + ORIGINAL_FILE_NAME_SEPARATOR + filename
+                    : filename;
 
             String newFilePath = dirPath + "/" + filename + "." + extension;
 
@@ -169,7 +175,7 @@ public class Ut {
             Files.createDirectories(path);
         }
 
-        private static String getFilenameFromUrl(String url) {
+        private static String getFilenameWithoutFromUrl(String url) {
             try {
                 String path = new URI(url).getPath();
                 String filename = Path.of(path).getFileName().toString();
@@ -196,7 +202,12 @@ public class Ut {
         }
 
         public static String getOriginalFileName(String filePath) {
-            return Path.of(filePath).getFileName().toString();
+            String originalFileName = Path.of(filePath).getFileName().toString();
+
+            return originalFileName.contains(ORIGINAL_FILE_NAME_SEPARATOR)
+                    ? originalFileName.substring(
+                    originalFileName.indexOf(ORIGINAL_FILE_NAME_SEPARATOR) + ORIGINAL_FILE_NAME_SEPARATOR.length())
+                    : originalFileName;
         }
 
         public static String getFileExt(String filePath) {
