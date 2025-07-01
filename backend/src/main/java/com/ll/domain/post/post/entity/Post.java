@@ -7,6 +7,7 @@ import com.ll.global.dto.Empty;
 import com.ll.global.exceptions.ServiceException;
 import com.ll.global.jpa.entity.BaseTime;
 import com.ll.global.rsData.RsData;
+import com.ll.util.Ut;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +17,7 @@ import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -151,10 +153,19 @@ public class Post extends BaseTime {
     }
 
     public void addGenFile(String typeCode, String filePath) {
+        String originalFileName = Ut.file.getOriginalFileName(filePath);
+        String fileExt = Ut.file.getFileExt(filePath);
+        String fileName = UUID.randomUUID() + "." + fileExt;
+        long fileSize = Ut.file.getFileSize(filePath);
+
         PostGenFile genFile = PostGenFile.builder()
                 .post(this)
                 .typeCode(typeCode)
                 .filePath(filePath)
+                .originalFileName(originalFileName)
+                .fileExt(fileExt)
+                .fileName(fileName)
+                .fileSize(fileSize)
                 .build();
 
         genFiles.add(genFile);
