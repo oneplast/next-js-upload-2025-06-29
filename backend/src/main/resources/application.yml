@@ -81,3 +81,6 @@ custom:
     secretKey: ON_SECRET
   accessToken:
     expirationSeconds: "#{60 * 20}"
+
+  genFile:
+    dirPath: c:/temp/glog_dev

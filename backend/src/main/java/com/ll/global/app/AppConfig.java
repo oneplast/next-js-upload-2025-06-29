@@ -33,6 +33,14 @@ public class AppConfig {
         AppConfig.siteFrontUrl = siteFrontUrl;
     }
 
+    @Getter
+    private static String genFileDirPath;
+
+    @Value("${custom.genFile.dirPath}")
+    public void setGenFileDirPath(String genFileDirPath) {
+        this.genFileDirPath = genFileDirPath;
+    }
+
     public static boolean isNotProd() {
         return true;
     }

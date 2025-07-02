@@ -1,6 +1,7 @@
 package com.ll.domain.post.genFile.entity;
 
 import com.ll.domain.post.post.entity.Post;
+import com.ll.global.app.AppConfig;
 import com.ll.global.jpa.entity.BaseTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,9 +21,12 @@ public class PostGenFile extends BaseTime {
     private Post post;
 
     private String typeCode;
-    private String filePath;
     private String originalFileName;
     private String fileExt;
     private String fileName;
     private long fileSize;
+
+    public String getFilePath() {
+        return AppConfig.getGenFileDirPath() + "/post/" + fileName;
+    }
 }
