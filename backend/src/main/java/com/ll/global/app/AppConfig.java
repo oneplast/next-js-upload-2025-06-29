@@ -6,9 +6,33 @@ import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 @Configuration
 public class AppConfig {
+    private static Environment environment;
+
+    @Autowired
+    public void setEnvironment(Environment environment) {
+        AppConfig.environment = environment;
+    }
+
+    public static boolean isProd() {
+        return environment.matchesProfiles("prod");
+    }
+
+    public static boolean isDev() {
+        return environment.matchesProfiles("dev");
+    }
+
+    public static boolean isTest() {
+        return environment.matchesProfiles("test");
+    }
+
+    public static boolean isNotProd() {
+        return !isProd();
+    }
+
     @Getter
     private static ObjectMapper objectMapper;
 
@@ -39,10 +63,6 @@ public class AppConfig {
     @Value("${custom.genFile.dirPath}")
     public void setGenFileDirPath(String genFileDirPath) {
         this.genFileDirPath = genFileDirPath;
-    }
-
-    public static boolean isNotProd() {
-        return true;
     }
 
     public static String getTempDirPath() {

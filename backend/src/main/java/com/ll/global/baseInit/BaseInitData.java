@@ -41,6 +41,10 @@ public class BaseInitData {
             return;
         }
 
+        if (AppConfig.isTest()) {
+            Ut.file.rmDir(AppConfig.getGenFileDirPath());
+        }
+
         Member memberSystem = memberService.join("system", "1234", "시스템", "");
         if (AppConfig.isNotProd()) {
             memberSystem.setApiKey("system");
