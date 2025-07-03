@@ -162,6 +162,7 @@ public class Post extends BaseTime {
                 .post(this)
                 .typeCode(typeCode)
                 .originalFileName(originalFileName)
+                .fileDateDir(Ut.date.getCurrentDateFormatted("yyyy-MM-dd"))
                 .fileExt(fileExt)
                 .fileName(fileName)
                 .fileSize(fileSize)

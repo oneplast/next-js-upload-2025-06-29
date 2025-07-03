@@ -19,6 +19,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.Key;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -31,6 +32,10 @@ public class Ut {
     public static class str {
         public static boolean isBlank(String str) {
             return str == null || str.trim().isEmpty();
+        }
+
+        public static String lcFirst(String str) {
+            return Character.toLowerCase(str.charAt(0)) + str.substring(1);
         }
     }
 
@@ -270,6 +275,13 @@ public class Ut {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static class date {
+        public static String getCurrentDateFormatted(String pattern) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            return simpleDateFormat.format(new Date());
         }
     }
 }

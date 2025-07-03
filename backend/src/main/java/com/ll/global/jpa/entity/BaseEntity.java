@@ -1,5 +1,6 @@
 package com.ll.global.jpa.entity;
 
+import com.ll.util.Ut;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,4 +19,9 @@ public class BaseEntity {
     @Setter(AccessLevel.PROTECTED)
     @EqualsAndHashCode.Include
     private Long id;
+
+    public String getModelName() {
+        String simpleName = this.getClass().getSimpleName();
+        return Ut.str.lcFirst(simpleName);
+    }
 }
