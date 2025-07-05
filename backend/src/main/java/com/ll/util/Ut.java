@@ -259,6 +259,22 @@ public class Ut {
                 }
             });
         }
+
+        public static String getFileExtTypeCodeFromFileExt(String ext) {
+            return switch (ext) {
+                case "jpeg", "jpg", "gif", "png", "svg", "webp" -> "img";
+                case "mp4", "avi", "mov" -> "video";
+                case "mp3" -> "audio";
+                default -> "etc";
+            };
+        }
+
+        public static String getFileExtType2CodeFromFileExt(String ext) {
+            return switch (ext) {
+                case "jpeg", "jpg" -> "jpg";
+                default -> ext;
+            };
+        }
     }
 
     public static class cmd {
