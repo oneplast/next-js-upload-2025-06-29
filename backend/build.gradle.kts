@@ -50,6 +50,10 @@ dependencies {
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
 
     implementation("org.apache.tika:tika-core:3.0.0")
+
+    implementation("com.twelvemonkeys.imageio:imageio-core:3.12.0")
+    implementation("com.twelvemonkeys.imageio:imageio-jpeg:3.12.0")
+    implementation("com.twelvemonkeys.imageio:imageio-webp:3.12.0")
 }
 
 tasks.withType<Test> {

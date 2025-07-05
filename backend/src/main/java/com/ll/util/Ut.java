@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ll.global.app.AppConfig;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,11 +22,15 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.security.Key;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import javax.crypto.SecretKey;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import lombok.SneakyThrows;
 
 public class Ut {
@@ -274,6 +279,44 @@ public class Ut {
                 case "jpeg", "jpg" -> "jpg";
                 default -> ext;
             };
+        }
+
+        public static Map<String, Object> getMetadata(String filePath) {
+            String ext = getFileExt(filePath);
+            String fileExtTypeCode = getFileExtTypeCodeFromFileExt(ext);
+
+            if (fileExtTypeCode.equals("img")) {
+                return getImgMetadata(filePath);
+            }
+
+            return Map.of();
+        }
+
+        private static Map<String, Object> getImgMetadata(String filePath) {
+            Map<String, Object> metadata = new LinkedHashMap<>();
+
+            try (ImageInputStream input = ImageIO.createImageInputStream(new File(filePath))) {
+                Iterator<ImageReader> readers = ImageIO.getImageReaders(input);
+
+                if (!readers.hasNext()) {
+                    throw new IOException("지원되지 않는 이미지 형식: " + filePath);
+                }
+
+                ImageReader reader = readers.next();
+                reader.setInput(input);
+
+                int width = reader.getWidth(0);
+                int height = reader.getHeight(0);
+
+                metadata.put("width", width);
+                metadata.put("height", height);
+
+                reader.dispose();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return metadata;
         }
     }
 

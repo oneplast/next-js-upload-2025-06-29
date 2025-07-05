@@ -16,8 +16,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -157,6 +159,15 @@ public class Post extends BaseTime {
         String fileExt = Ut.file.getFileExt(filePath);
         String fileExtTypeCode = Ut.file.getFileExtTypeCodeFromFileExt(fileExt);
         String fileExtType2Code = Ut.file.getFileExtType2CodeFromFileExt(fileExt);
+
+        Map<String, Object> metadata = Ut.file.getMetadata(filePath);
+
+        String metadataStr = metadata
+                .entrySet()
+                .stream()
+                .map(entry -> entry.getKey() + "-" + entry.getValue())
+                .collect(Collectors.joining(";"));
+
         String fileName = UUID.randomUUID() + "." + fileExt;
         long fileSize = Ut.file.getFileSize(filePath);
 
@@ -164,6 +175,7 @@ public class Post extends BaseTime {
                 .post(this)
                 .typeCode(typeCode)
                 .originalFileName(originalFileName)
+                .metadata(metadataStr)
                 .fileDateDir(Ut.date.getCurrentDateFormatted("yyyy-MM-dd"))
                 .fileExt(fileExt)
                 .fileExtTypeCode(fileExtTypeCode)

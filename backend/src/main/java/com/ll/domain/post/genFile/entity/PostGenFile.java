@@ -22,6 +22,7 @@ public class PostGenFile extends BaseTime {
 
     private String typeCode;
     private String originalFileName;
+    private String metadata;
     private String fileDateDir;
     private String fileExt;
     private String fileExtTypeCode;
