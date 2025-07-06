@@ -21,6 +21,7 @@ public class PostGenFile extends BaseTime {
     private Post post;
 
     private String typeCode;
+    private int fileNo;
     private String originalFileName;
     private String metadata;
     private String fileDateDir;
@@ -28,7 +29,7 @@ public class PostGenFile extends BaseTime {
     private String fileExtTypeCode;
     private String fileExtType2Code;
     private String fileName;
-    private long fileSize;
+    private int fileSize;
 
     public String getFilePath() {
         return AppConfig.getGenFileDirPath() + "/" + getModelName() + "/" + typeCode + "/" + fileDateDir + "/"

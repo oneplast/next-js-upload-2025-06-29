@@ -128,9 +128,14 @@ public class BaseInitData {
         Post post8 = postService.write(memberUser4, "발야구를 새벽 3시에 하실 분?", "새벽 3시 까지 19명을 모아야 합니다."
                 , false, true);
 
-        String newFilePath = Ut.file.downloadByHttp("https://picsum.photos/id/237/200/300", AppConfig.getTempDirPath(),
+        String genFileFilePath = Ut.file.downloadByHttp("https://picsum.photos/id/237/200/300",
+                AppConfig.getTempDirPath(),
                 true);
-        post8.addGenFile("attachment", newFilePath);
+        post8.addGenFile("attachment", genFileFilePath);
+
+        String genFile2FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/238/200/300",
+                AppConfig.getTempDirPath(), true);
+        post8.addGenFile("attachment", genFile2FilePath);
 
         IntStream.rangeClosed(9, 100).forEach(
                 i -> postService.write(

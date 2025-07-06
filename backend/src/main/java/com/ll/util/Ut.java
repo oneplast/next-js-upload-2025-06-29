@@ -236,8 +236,8 @@ public class Ut {
         }
 
         @SneakyThrows
-        public static long getFileSize(String filePath) {
-            return Files.size(Path.of(filePath));
+        public static int getFileSize(String filePath) {
+            return (int) Files.size(Path.of(filePath));
         }
 
         @SneakyThrows
