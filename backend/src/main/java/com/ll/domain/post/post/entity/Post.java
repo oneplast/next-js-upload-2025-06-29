@@ -200,4 +200,20 @@ public class Post extends BaseTime {
                        .max()
                        .orElse(0) + 1;
     }
+
+    public Optional<PostGenFile> getGenFileByTypeCodeAndFileNo(String typeCode, int fileNo) {
+        return genFiles.stream()
+                .filter(genFile -> genFile.getTypeCode().equals(typeCode))
+                .filter(genFile -> genFile.getFileNo() == fileNo)
+                .findFirst();
+    }
+
+    public void deleteGenFile(String typeCode, int fileNo) {
+        getGenFileByTypeCodeAndFileNo(typeCode, fileNo)
+                .ifPresent(genFile -> {
+                    String filePath = genFile.getFilePath();
+                    genFiles.removeIf(_genFile -> _genFile == genFile);
+                    Ut.file.rm(filePath);
+                });
+    }
 }
