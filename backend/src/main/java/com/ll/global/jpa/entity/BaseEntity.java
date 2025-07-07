@@ -18,7 +18,7 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.PROTECTED)
     @EqualsAndHashCode.Include
-    private Long id;
+    protected Long id;
 
     public String getModelName() {
         String simpleName = this.getClass().getSimpleName();

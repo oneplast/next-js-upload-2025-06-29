@@ -212,7 +212,7 @@ public class Post extends BaseTime {
         getGenFileByTypeCodeAndFileNo(typeCode, fileNo)
                 .ifPresent(genFile -> {
                     String filePath = genFile.getFilePath();
-                    genFiles.removeIf(_genFile -> _genFile == genFile);
+                    genFiles.remove(genFile);
                     Ut.file.rm(filePath);
                 });
     }
