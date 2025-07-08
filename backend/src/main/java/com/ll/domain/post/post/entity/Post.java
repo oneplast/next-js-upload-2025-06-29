@@ -217,4 +217,36 @@ public class Post extends BaseTime {
                     Ut.file.rm(filePath);
                 });
     }
+
+    public void modifyGenFile(String typeCode, int fileNo, String filePath) {
+        getGenFileByTypeCodeAndFileNo(typeCode, fileNo)
+                .ifPresent(genFile -> {
+                    Ut.file.rm(genFile.getFilePath());
+
+                    String originalFileName = Ut.file.getOriginalFileName(filePath);
+                    String fileExt = Ut.file.getFileExt(filePath);
+                    String fileExtTypeCode = Ut.file.getFileExtTypeCodeFromFileExt(fileExt);
+                    String fileExtType2Code = Ut.file.getFileExtType2CodeFromFileExt(fileExt);
+
+                    Map<String, Object> metadata = Ut.file.getMetadata(filePath);
+
+                    String metadataStr = metadata.entrySet().stream()
+                            .map(entry -> entry.getKey() + "-" + entry.getValue())
+                            .collect(Collectors.joining(";"));
+
+                    String fileName = UUID.randomUUID() + "." + fileExt;
+                    int fileSize = Ut.file.getFileSize(filePath);
+
+                    genFile.setOriginalFileName(originalFileName);
+                    genFile.setMetadata(metadataStr);
+                    genFile.setFileDateDir(Ut.date.getCurrentDateFormatted("yyyy-MM-dd"));
+                    genFile.setFileExt(fileExt);
+                    genFile.setFileExtTypeCode(fileExtTypeCode);
+                    genFile.setFileExtType2Code(fileExtType2Code);
+                    genFile.setFileName(fileName);
+                    genFile.setFileSize(fileSize);
+
+                    Ut.file.mv(filePath, genFile.getFilePath());
+                });
+    }
 }

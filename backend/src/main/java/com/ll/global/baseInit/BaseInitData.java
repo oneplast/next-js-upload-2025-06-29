@@ -143,6 +143,10 @@ public class BaseInitData {
 
         post8.deleteGenFile("attachment", 2);
 
+        String genFile4FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/240/600/500",
+                AppConfig.getTempDirPath(), true);
+        post8.modifyGenFile("thumbnail", 1, genFile4FilePath);
+
         IntStream.rangeClosed(9, 100).forEach(
                 i -> postService.write(
                         memberUser5,
