@@ -15,9 +15,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -79,7 +79,7 @@ public class ApiV1PostCommentController {
 
     record PostCommentModifyReqBody(
             @NotBlank
-            @Length(min = 2, max = 100)
+            @Size(min = 2, max = 100)
             String content
     ) {
     }
@@ -112,7 +112,7 @@ public class ApiV1PostCommentController {
 
     record PostCommentWriteReqBody(
             @NotBlank
-            @Length(min = 2, max = 100)
+            @Size(min = 2, max = 100)
             String content
     ) {
     }

@@ -8,17 +8,21 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@SuperBuilder
+@NoArgsConstructor
 @MappedSuperclass
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.PROTECTED)
     @EqualsAndHashCode.Include
-    protected Long id;
+    private Long id;
 
     public String getModelName() {
         String simpleName = this.getClass().getSimpleName();
