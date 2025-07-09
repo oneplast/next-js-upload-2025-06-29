@@ -129,23 +129,26 @@ public class BaseInitData {
                 , false, true);
 
         String genFileFilePath = Ut.file.downloadByHttp("https://picsum.photos/id/237/200/300",
-                AppConfig.getTempDirPath(),
-                true);
+                AppConfig.getTempDirPath());
         post8.addGenFile("attachment", genFileFilePath);
 
         String genFile2FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/238/200/300",
-                AppConfig.getTempDirPath(), true);
+                AppConfig.getTempDirPath());
         post8.addGenFile("attachment", genFile2FilePath);
 
         String genFile3FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/239/200/300",
-                AppConfig.getTempDirPath(), true);
+                AppConfig.getTempDirPath());
         post8.addGenFile("thumbnail", genFile3FilePath);
 
         post8.deleteGenFile("attachment", 2);
 
         String genFile4FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/240/600/500",
-                AppConfig.getTempDirPath(), true);
+                AppConfig.getTempDirPath());
         post8.modifyGenFile("thumbnail", 1, genFile4FilePath);
+
+        String genFile5FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/241/500/500",
+                AppConfig.getTempDirPath());
+        post8.putGenFile("attachment", 3, genFile5FilePath);
 
         IntStream.rangeClosed(9, 100).forEach(
                 i -> postService.write(
