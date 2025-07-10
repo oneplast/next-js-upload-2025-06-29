@@ -263,4 +263,26 @@ public class Post extends BaseTime {
             addGenFile(typeCode, fileNo, filepath);
         }
     }
+
+    public void checkActorCanMakeNewGenFile(Member actor) {
+        Optional.of(
+                        getCheckActorCanMakeNewGenFileRs(actor)
+                )
+                .filter(RsData::isFail)
+                .ifPresent(rsData -> {
+                    throw new ServiceException(rsData.getResultCode(), rsData.getMsg());
+                });
+    }
+
+    public RsData<Empty> getCheckActorCanMakeNewGenFileRs(Member actor) {
+        if (actor == null) {
+            return new RsData<>("401-1", "로그인 후 이용해주세요.");
+        }
+
+        if (actor.equals(author)) {
+            return RsData.OK;
+        }
+
+        return new RsData<>("403-1", "작성자만 파일을 업로드할 수 있습니다.");
+    }
 }

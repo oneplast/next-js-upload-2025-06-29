@@ -3,6 +3,7 @@ package com.ll.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ll.global.app.AppConfig;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.lang.Objects;
 import io.jsonwebtoken.security.Keys;
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +35,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import lombok.SneakyThrows;
+import org.springframework.web.multipart.MultipartFile;
 
 public class Ut {
     public static class str {
@@ -328,6 +330,21 @@ public class Ut {
             }
 
             return metadata;
+        }
+
+        @SneakyThrows
+        public static String toFile(MultipartFile multipartFile, String dirPath) {
+            if (Objects.isEmpty(multipartFile)) {
+                return "";
+            }
+
+            String filePath = dirPath + "/" + UUID.randomUUID() + ORIGINAL_FILE_NAME_SEPARATOR
+                              + multipartFile.getOriginalFilename();
+
+            Ut.file.mkdir(dirPath);
+            multipartFile.transferTo(new File(filePath));
+
+            return filePath;
         }
     }
 
