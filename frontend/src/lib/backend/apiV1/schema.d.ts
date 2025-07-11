@@ -155,6 +155,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/posts/{postId}/genFiles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 다건조회 */
+        get: operations["items_2"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/posts/statistics": {
         parameters: {
             query?: never;
@@ -197,7 +214,7 @@ export interface paths {
             cookie?: never;
         };
         /** 회원 다건 조회 */
-        get: operations["items_2"];
+        get: operations["items_3"];
         put?: never;
         post?: never;
         delete?: never;
@@ -904,6 +921,37 @@ export interface operations {
             };
         };
     };
+    items_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["PostGenFileDto"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+        };
+    };
     statistics: {
         parameters: {
             query?: never;
@@ -967,7 +1015,7 @@ export interface operations {
             };
         };
     };
-    items_2: {
+    items_3: {
         parameters: {
             query?: {
                 searchKeywordType?: "all" | "username" | "nickname";

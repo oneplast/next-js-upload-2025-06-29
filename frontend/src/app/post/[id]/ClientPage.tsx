@@ -15,16 +15,19 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 
-import { ListX, Lock } from "lucide-react";
+import { Download, ListX, Lock } from "lucide-react";
 
 export default function ClientPage({
   post,
+  postGenFiles,
 }: {
   post: components["schemas"]["PostWithContentDto"];
+  postGenFiles: components["schemas"]["PostGenFileDto"][];
 }) {
   const { loginMember, isAdmin } = use(LoginMemberContext);
 
@@ -83,6 +86,30 @@ export default function ClientPage({
         <CardContent>
           <div className="whitespace-pre-line">{post.content}</div>
         </CardContent>
+        <CardFooter>
+          <div className="-mx-4">
+            {postGenFiles
+              .filter((file) => file.typeCode === "attachment")
+              .map((file) => (
+                <Button key={file.id} variant="link" asChild>
+                  <a
+                    href={`http://localhost:8080/post/genFile/download/${post.id}/${file.fileName}`}
+                    className="flex items-center gap-2"
+                  >
+                    <Image
+                      src={`http://localhost:8080/gen/postGenFile/${file.typeCode}/${file.fileDateDir}/${file.fileName}`}
+                      alt={file.originalFileName ?? ""}
+                      width={16}
+                      height={16}
+                      className="align-self h-[16px] w-[16px]"
+                    />
+                    <Download />
+                    <span>{file.originalFileName} 다운로드</span>
+                  </a>
+                </Button>
+              ))}
+          </div>
+        </CardFooter>
       </Card>
     </main>
   );
