@@ -38,6 +38,7 @@ const wrtieFormSchema = z.object({
     .max(10_000_000, "내용은 1,000만자 이하여야 합니다."),
   published: z.boolean().optional(),
   listed: z.boolean().optional(),
+  attachment_0: z.instanceof(File).optional(),
 });
 
 type WriteFormInputs = z.infer<typeof wrtieFormSchema>;
@@ -77,6 +78,30 @@ export default function ClientPage({
     if (response.error) {
       toast(response.error.msg);
       return;
+    }
+
+    // 파일 업로드 처리
+    if (data.attachment_0) {
+      const formData = new FormData();
+      formData.append("file", data.attachment_0);
+
+      const uploadResponse = await client.POST(
+        "/api/v1/posts/{postId}/genFiles/{typeCode}",
+        {
+          params: {
+            path: {
+              postId: post.id,
+              typeCode: "attachment",
+            },
+          },
+          body: formData,
+        },
+      );
+
+      if (uploadResponse.error) {
+        toast(uploadResponse.error.msg);
+        return;
+      }
     }
 
     toast(response.data.msg);
@@ -137,6 +162,27 @@ export default function ClientPage({
           </div>
           <FormField
             control={form.control}
+            name="attachment_0"
+            render={({ field: { onChange, ...field } }) => (
+              <FormItem>
+                <FormLabel>첨부파일</FormLabel>
+                <FormControl>
+                  <Input
+                    type="file"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      onChange(file);
+                    }}
+                    {...field}
+                    value={undefined}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="content"
             render={({ field }) => (
               <FormItem>
@@ -144,7 +190,7 @@ export default function ClientPage({
                 <FormControl>
                   <Textarea
                     {...field}
-                    className="h-[calc(100dvh-380px)] min-h-[300px]"
+                    className="h-[calc(100dvh-460px)] min-h-[300px]"
                     placeholder={post.content}
                   />
                 </FormControl>

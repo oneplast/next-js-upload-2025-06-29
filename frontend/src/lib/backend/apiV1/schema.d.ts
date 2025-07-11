@@ -83,6 +83,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/posts/{postId}/genFiles/{typeCode}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 등록 */
+        post: operations["makeNewFile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/posts/{postId}/comments": {
         parameters: {
             query?: never;
@@ -310,6 +327,32 @@ export interface components {
             content: string;
             published?: boolean;
             listed?: boolean;
+        };
+        PostGenFileDto: {
+            /** Format: int64 */
+            id?: number;
+            /** Format: date-time */
+            createDate?: string;
+            /** Format: date-time */
+            modifyDate?: string;
+            /** Format: int64 */
+            postId?: number;
+            fileName?: string;
+            typeCode?: string;
+            fileExtTypeCode?: string;
+            fileExtType2Code?: string;
+            /** Format: int64 */
+            fileSize?: number;
+            /** Format: int64 */
+            fileNo?: number;
+            fileExt?: string;
+            fileDateDir?: string;
+            originalFileName?: string;
+        };
+        RsDataPostGenFileDto: {
+            resultCode: string;
+            msg: string;
+            data: components["schemas"]["PostGenFileDto"];
         };
         PostCommentWriteReqBody: {
             content: string;
@@ -680,6 +723,42 @@ export interface operations {
                 };
                 content: {
                     "application/json;charset=utf-8": components["schemas"]["RsDataPostWithContentDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+        };
+    };
+    makeNewFile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+                typeCode: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": unknown;
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["RsDataPostGenFileDto"];
                 };
             };
             /** @description Bad Request */
