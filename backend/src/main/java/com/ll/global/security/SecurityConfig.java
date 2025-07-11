@@ -34,7 +34,8 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.GET,
                                                 "/api/*/posts/{id:\\d+}",
                                                 "/api/*/posts",
-                                                "/api/*/posts/{postId:\\d+}/comments")
+                                                "/api/*/posts/{postId:\\d+}/comments",
+                                                "/api/*/posts/{postId:\\d+}/genFiles")
                                         .permitAll()
                                         .requestMatchers("/api/*/members/login",
                                                 "/api/*/members/logout",

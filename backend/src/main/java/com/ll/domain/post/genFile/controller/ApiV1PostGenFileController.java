@@ -16,10 +16,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,9 +34,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "ApiV1PostGenFileController", description = "API 글 파일 컨트롤러")
 @SecurityRequirement(name = "bearerAuth")
 public class ApiV1PostGenFileController {
-    @Autowired
-    @Lazy
-    private ApiV1PostGenFileController self;
     private final PostService postService;
     private final Rq rq;
 
@@ -65,5 +63,17 @@ public class ApiV1PostGenFileController {
                 "%d번 파일이 생성되었습니다.".formatted(postGenFile.getId()),
                 new PostGenFileDto(postGenFile)
         );
+    }
+
+    @GetMapping
+    @Transactional(readOnly = true)
+    @Operation(summary = "다건조회")
+    public List<PostGenFileDto> items(@PathVariable long postId) {
+        Post post = postService.findById(postId).orElseThrow(
+                () -> new ServiceException("404-1", "%d번 글은 존재하지 않습니다.".formatted(postId)));
+
+        return post.getGenFiles().stream()
+                .map(PostGenFileDto::new)
+                .toList();
     }
 }
