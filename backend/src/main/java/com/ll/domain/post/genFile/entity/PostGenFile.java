@@ -18,4 +18,9 @@ import lombok.experimental.SuperBuilder;
 public class PostGenFile extends GenFile {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
+
+    @Override
+    protected long getOwnerModelId() {
+        return post.getId();
+    }
 }

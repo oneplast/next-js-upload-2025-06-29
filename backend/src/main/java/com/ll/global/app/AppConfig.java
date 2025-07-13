@@ -58,6 +58,14 @@ public class AppConfig {
     }
 
     @Getter
+    private static String siteBackUrl;
+
+    @Value("${custom.site.backUrl}")
+    public void setSiteBackUrl(String siteBackUrl) {
+        AppConfig.siteBackUrl = siteBackUrl;
+    }
+
+    @Getter
     private static String genFileDirPath;
 
     @Value("${custom.genFile.dirPath}")

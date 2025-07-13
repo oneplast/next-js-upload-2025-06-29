@@ -69,7 +69,9 @@ class ApiV1PostGenFileControllerTest {
                     .andExpect(jsonPath("$[%d].fileExt".formatted(i)).value(postGenFile.getFileExt()))
                     .andExpect(jsonPath("$[%d].fileDateDir".formatted(i)).value(postGenFile.getFileDateDir()))
                     .andExpect(
-                            jsonPath("$[%d].originalFileName".formatted(i)).value(postGenFile.getOriginalFileName()));
+                            jsonPath("$[%d].originalFileName".formatted(i)).value(postGenFile.getOriginalFileName()))
+                    .andExpect(jsonPath("$[%d].downloadUrl".formatted(i)).value(postGenFile.getDownloadUrl()))
+                    .andExpect(jsonPath("$[%d].publicUrl".formatted(i)).value(postGenFile.getPublicUrl()));
         }
     }
 }

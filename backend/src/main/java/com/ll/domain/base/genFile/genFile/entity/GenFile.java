@@ -58,4 +58,19 @@ public abstract class GenFile extends BaseTime {
 
         return Objects.hash(super.hashCode(), typeCode, fileNo);
     }
+
+    private String getOwnerModelName() {
+        return this.getModelName().replace("GenFile", "");
+    }
+
+    public String getDownloadUrl() {
+        return AppConfig.getSiteBackUrl() + "/" + getOwnerModelName() + "/genFile/download/" + getOwnerModelId() + "/" + fileName;
+    }
+
+    public String getPublicUrl() {
+        return AppConfig.getSiteBackUrl() + "/gen/" + getModelName() + "/" + typeCode + "/" + fileDateDir + "/"
+               + fileName;
+    }
+
+    abstract protected long getOwnerModelId();
 }
