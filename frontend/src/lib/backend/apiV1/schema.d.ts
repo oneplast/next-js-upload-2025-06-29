@@ -365,6 +365,8 @@ export interface components {
             fileExt?: string;
             fileDateDir?: string;
             originalFileName?: string;
+            downloadUrl?: string;
+            publicUrl?: string;
         };
         RsDataPostGenFileDto: {
             resultCode: string;

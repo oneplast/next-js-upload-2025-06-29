@@ -93,17 +93,19 @@ export default function ClientPage({
               .map((file) => (
                 <Button key={file.id} variant="link" asChild>
                   <a
-                    href={`http://localhost:8080/post/genFile/download/${post.id}/${file.fileName}`}
+                    href={file.downloadUrl}
                     className="flex items-center gap-2"
                   >
-                    <Image
-                      src={`http://localhost:8080/gen/postGenFile/${file.typeCode}/${file.fileDateDir}/${file.fileName}`}
-                      alt={file.originalFileName ?? ""}
-                      width={16}
-                      height={16}
-                      className="align-self h-[16px] w-[16px]"
-                    />
                     <Download />
+                    {file.fileExtTypeCode === "img" && (
+                      <Image
+                        src={file.publicUrl as string}
+                        alt={file.originalFileName as string}
+                        width={16}
+                        height={16}
+                        className="align-self h-[16px] w-[16px]"
+                      />
+                    )}
                     <span>{file.originalFileName} 다운로드</span>
                   </a>
                 </Button>
