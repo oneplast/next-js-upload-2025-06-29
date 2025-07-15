@@ -507,7 +507,8 @@ public class ApiV1PostControllerTest {
                             Matchers.startsWith(post.getModifyDate().toString().substring(0, 20))))
                     .andExpect(jsonPath("$.items[%d].authorId".formatted(i)).value(post.getAuthor().getId()))
                     .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(post.getAuthor().getName()))
-                    .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(post.getAuthor().getProfileImgUrlOrDefault()))
+                    .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(
+                            post.getAuthor().getProfileImgUrlOrDefault()))
                     .andExpect(jsonPath("$.items[%d].title".formatted(i)).value(post.getTitle()))
                     .andExpect(jsonPath("$.items[%d].content".formatted(i)).doesNotExist())
                     .andExpect(jsonPath("$.items[%d].published".formatted(i)).value(post.isPublished()))
@@ -547,7 +548,8 @@ public class ApiV1PostControllerTest {
                             Matchers.startsWith(post.getModifyDate().toString().substring(0, 20))))
                     .andExpect(jsonPath("$.items[%d].authorId".formatted(i)).value(post.getAuthor().getId()))
                     .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(post.getAuthor().getName()))
-                    .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(post.getAuthor().getProfileImgUrlOrDefault()))
+                    .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(
+                            post.getAuthor().getProfileImgUrlOrDefault()))
                     .andExpect(jsonPath("$.items[%d].title".formatted(i)).value(post.getTitle()))
                     .andExpect(jsonPath("$.items[%d].content".formatted(i)).doesNotExist())
                     .andExpect(jsonPath("$.items[%d].published".formatted(i)).value(post.isPublished()))
@@ -587,7 +589,8 @@ public class ApiV1PostControllerTest {
                             Matchers.startsWith(post.getModifyDate().toString().substring(0, 20))))
                     .andExpect(jsonPath("$.items[%d].authorId".formatted(i)).value(post.getAuthor().getId()))
                     .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(post.getAuthor().getName()))
-                    .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(post.getAuthor().getProfileImgUrlOrDefault()))
+                    .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(
+                            post.getAuthor().getProfileImgUrlOrDefault()))
                     .andExpect(jsonPath("$.items[%d].title".formatted(i)).value(post.getTitle()))
                     .andExpect(jsonPath("$.items[%d].content".formatted(i)).doesNotExist())
                     .andExpect(jsonPath("$.items[%d].published".formatted(i)).value(post.isPublished()))
@@ -631,7 +634,8 @@ public class ApiV1PostControllerTest {
                             Matchers.startsWith(post.getModifyDate().toString().substring(0, 20))))
                     .andExpect(jsonPath("$.items[%d].authorId".formatted(i)).value(post.getAuthor().getId()))
                     .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(post.getAuthor().getName()))
-                    .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(post.getAuthor().getProfileImgUrlOrDefault()))
+                    .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(
+                            post.getAuthor().getProfileImgUrlOrDefault()))
                     .andExpect(jsonPath("$.items[%d].title".formatted(i)).value(post.getTitle()))
                     .andExpect(jsonPath("$.items[%d].content".formatted(i)).doesNotExist())
                     .andExpect(jsonPath("$.items[%d].published".formatted(i)).value(post.isPublished()))
@@ -677,7 +681,8 @@ public class ApiV1PostControllerTest {
                             Matchers.startsWith(post.getModifyDate().toString().substring(0, 20))))
                     .andExpect(jsonPath("$.items[%d].authorId".formatted(i)).value(post.getAuthor().getId()))
                     .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(post.getAuthor().getName()))
-                    .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(post.getAuthor().getProfileImgUrlOrDefault()))
+                    .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(
+                            post.getAuthor().getProfileImgUrlOrDefault()))
                     .andExpect(jsonPath("$.items[%d].title".formatted(i)).value(post.getTitle()))
                     .andExpect(jsonPath("$.items[%d].content".formatted(i)).doesNotExist())
                     .andExpect(jsonPath("$.items[%d].published".formatted(i)).value(post.isPublished()))
@@ -722,7 +727,8 @@ public class ApiV1PostControllerTest {
                             Matchers.startsWith(post.getModifyDate().toString().substring(0, 20))))
                     .andExpect(jsonPath("$.items[%d].authorId".formatted(i)).value(post.getAuthor().getId()))
                     .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(post.getAuthor().getName()))
-                    .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(post.getAuthor().getProfileImgUrlOrDefault()))
+                    .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(
+                            post.getAuthor().getProfileImgUrlOrDefault()))
                     .andExpect(jsonPath("$.items[%d].title".formatted(i)).value(post.getTitle()))
                     .andExpect(jsonPath("$.items[%d].content".formatted(i)).doesNotExist())
                     .andExpect(jsonPath("$.items[%d].published".formatted(i)).value(post.isPublished()))
@@ -763,5 +769,41 @@ public class ApiV1PostControllerTest {
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.resultCode").value("403-1"))
                 .andExpect(jsonPath("$.msg").value("권한이 없습니다."));
+    }
+
+    @Test
+    @DisplayName("임시글 생성")
+    @WithUserDetails("user1")
+    void t25() throws Exception {
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/v1/posts/temp")
+                )
+                .andDo(print());
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.resultCode").value("201-1"));
+    }
+
+    @Test
+    @DisplayName("임시글 생성, 이미 임시글이 있다면 생성하지 않음")
+    @WithUserDetails("user1")
+    void t26() throws Exception {
+        ResultActions resultActions1 = mvc
+                .perform(
+                        post("/api/v1/posts/temp")
+                )
+                .andDo(print());
+
+        ResultActions resultActions2 = mvc
+                .perform(
+                        post("/api/v1/posts/temp")
+                )
+                .andDo(print());
+
+        resultActions2
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("200-1"));
     }
 }

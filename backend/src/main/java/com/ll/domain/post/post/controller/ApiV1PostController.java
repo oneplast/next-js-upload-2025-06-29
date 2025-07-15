@@ -120,6 +120,23 @@ public class ApiV1PostController {
         return makePostWithContentDto(post);
     }
 
+    record PostMakeTempResponseBody(
+            @NonNull
+            PostDto post
+    ) {
+    }
+
+    @Transactional
+    @PostMapping("/temp")
+    @Operation(summary = "임시 글 생성")
+    public RsData<PostMakeTempResponseBody> makeTemp() {
+        RsData<Post> findTempOrMakeRsData = postService.findTempOrMake(rq.getActor());
+
+        return findTempOrMakeRsData.newDataOf(
+                new PostMakeTempResponseBody(new PostDto(findTempOrMakeRsData.getData()))
+        );
+    }
+
     record PostWriteReqBody(
             @NotBlank
             @Size(min = 2, max = 100)

@@ -3,9 +3,11 @@ package com.ll.domain.post.post.service;
 import com.ll.domain.member.member.entity.Member;
 import com.ll.domain.post.post.entity.Post;
 import com.ll.domain.post.post.repository.PostRepository;
+import com.ll.global.rsData.RsData;
 import com.ll.global.search.PostSearchKeywordTypeV1;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -91,5 +93,22 @@ public class PostService {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Order.desc("id")));
 
         return postRepository.findByKw(searchKeywordType, searchKeyword, author, null, null, pageable);
+    }
+
+    public RsData<Post> findTempOrMake(Member author) {
+        AtomicBoolean isNew = new AtomicBoolean(false);
+
+        Post post = postRepository.findTop1ByAuthorAndPublishedAndTitleOrderByIdDesc(
+                author, false, "임시글"
+        ).orElseGet(() -> {
+            isNew.set(true);
+            return write(author, "임시글", "", false, false);
+        });
+
+        if (isNew.get()) {
+            return new RsData<>("201-1", "%d번 임시글이 생성되었습니다.".formatted(post.getId()), post);
+        }
+
+        return new RsData<>("200-1", "%d번 임시글을 불러옵니다.".formatted(post.getId()), post);
     }
 }
