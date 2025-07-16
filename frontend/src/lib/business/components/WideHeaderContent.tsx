@@ -1,8 +1,12 @@
 "use client";
 
 import { use } from "react";
+import { toast } from "sonner";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import client from "@/lib/backend/client";
 
 import { LoginMemberContext } from "@/stores/auth/loginMember";
 
@@ -26,6 +30,7 @@ export default function WideHeaderContent({
 }: {
   className?: string;
 }) {
+  const router = useRouter();
   const { isLogin, isUserPage, isAdminPage } = use(LoginMemberContext);
 
   return (
@@ -41,11 +46,22 @@ export default function WideHeaderContent({
             </Link>
           </Button>
           {isLogin && (
-            <Button variant="link" asChild>
-              <Link href="/post/write">
-                <Pencil />
-                작성
-              </Link>
+            <Button
+              variant="link"
+              onClick={() =>
+                client.POST("/api/v1/posts/temp").then((response) => {
+                  if (response.error) {
+                    toast(response.error.msg);
+                    return;
+                  } else {
+                    toast(response.data.msg);
+
+                    router.replace(`/post/${response.data.data.post.id}/edit`);
+                  }
+                })
+              }
+            >
+              <Pencil /> 작성
             </Button>
           )}
           {isLogin && (

@@ -118,6 +118,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/posts/temp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 임시 글 생성 */
+        post: operations["makeTemp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/members/login": {
         parameters: {
             query?: never;
@@ -376,6 +393,29 @@ export interface components {
         PostCommentWriteReqBody: {
             content: string;
         };
+        PostDto: {
+            /** Format: int64 */
+            id: number;
+            /** Format: date-time */
+            createDate: string;
+            /** Format: date-time */
+            modifyDate: string;
+            /** Format: int64 */
+            authorId: number;
+            authorName: string;
+            authorProfileImgUrl: string;
+            title: string;
+            published: boolean;
+            listed: boolean;
+        };
+        PostMakeTempResponseBody: {
+            post: components["schemas"]["PostDto"];
+        };
+        RsDataPostMakeTempResponseBody: {
+            resultCode: string;
+            msg: string;
+            data: components["schemas"]["PostMakeTempResponseBody"];
+        };
         MemberLoginReqBody: {
             username: string;
             password: string;
@@ -406,21 +446,6 @@ export interface components {
             /** Format: int64 */
             totalItems: number;
             items: components["schemas"]["PostDto"][];
-        };
-        PostDto: {
-            /** Format: int64 */
-            id: number;
-            /** Format: date-time */
-            createDate: string;
-            /** Format: date-time */
-            modifyDate: string;
-            /** Format: int64 */
-            authorId: number;
-            authorName: string;
-            authorProfileImgUrl: string;
-            title: string;
-            published: boolean;
-            listed: boolean;
         };
         PostStatisticsResBody: {
             /** Format: int64 */
@@ -844,6 +869,35 @@ export interface operations {
                 };
                 content: {
                     "application/json;charset=utf-8": components["schemas"]["RsDataPostCommentDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+        };
+    };
+    makeTemp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["RsDataPostMakeTempResponseBody"];
                 };
             };
             /** @description Bad Request */
