@@ -30,6 +30,7 @@ import {
 import LoginButton from "./LoginButton";
 import Logo from "./Logo";
 import MeMenuButton from "./MeMenuButton";
+import PostWriteButton from "./PostWriteButton";
 import ThemeToggleButton from "./ThemeToggleButton";
 
 export default function NarrowHeaderContent({
@@ -80,16 +81,10 @@ export default function NarrowHeaderContent({
                   {isLogin && (
                     <li>
                       <DrawerClose asChild>
-                        <Button
-                          variant="link"
+                        <PostWriteButton
                           className="w-full justify-start"
-                          asChild
-                        >
-                          <Link href="/post/write">
-                            <Pencil />
-                            작성
-                          </Link>
-                        </Button>
+                          text
+                        />
                       </DrawerClose>
                     </li>
                   )}
