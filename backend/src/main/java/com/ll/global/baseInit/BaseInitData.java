@@ -2,6 +2,7 @@ package com.ll.global.baseInit;
 
 import com.ll.domain.member.member.entity.Member;
 import com.ll.domain.member.member.service.MemberService;
+import com.ll.domain.post.genFile.entity.PostGenFile.TypeCode;
 import com.ll.domain.post.post.entity.Post;
 import com.ll.domain.post.post.service.PostService;
 import com.ll.global.app.AppConfig;
@@ -128,29 +129,31 @@ public class BaseInitData {
         Post post8 = postService.write(memberUser4, "발야구를 새벽 3시에 하실 분?", "새벽 3시 까지 19명을 모아야 합니다."
                 , false, true);
 
+        Post post9 = postService.write(memberUser4, "테이블테니스를 하실 분있나요?", "테이블테니스 강력 추천합니다.", true, true);
+
         String genFileFilePath = Ut.file.downloadByHttp("https://picsum.photos/id/237/200/300",
                 AppConfig.getTempDirPath());
-        post8.addGenFile("attachment", genFileFilePath);
+        post9.addGenFile(TypeCode.attachment, genFileFilePath);
 
         String genFile2FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/238/200/300",
                 AppConfig.getTempDirPath());
-        post8.addGenFile("attachment", genFile2FilePath);
+        post9.addGenFile(TypeCode.attachment, genFile2FilePath);
 
-        String genFile3FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/239/200/300",
+        post9.deleteGenFile(TypeCode.attachment, 2);
+
+        genFile2FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/239/500/500",
                 AppConfig.getTempDirPath());
-        post8.addGenFile("thumbnail", genFile3FilePath);
+        post9.addGenFile(TypeCode.thumbnail, genFile2FilePath);
 
-        post8.deleteGenFile("attachment", 2);
-
-        String genFile4FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/240/600/500",
+        String newGenFile2FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/240/600/500",
                 AppConfig.getTempDirPath());
-        post8.modifyGenFile("thumbnail", 1, genFile4FilePath);
+        post9.modifyGenFile(TypeCode.thumbnail, 1, newGenFile2FilePath);
 
-        String genFile5FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/241/500/500",
+        String genFile3FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/241/500/500",
                 AppConfig.getTempDirPath());
-        post8.putGenFile("attachment", 3, genFile5FilePath);
+        post9.putGenFile(TypeCode.attachment, 3, genFile3FilePath);
 
-        IntStream.rangeClosed(9, 100).forEach(
+        IntStream.rangeClosed(10, 100).forEach(
                 i -> postService.write(
                         memberUser5,
                         "테스트 게시물 " + i,

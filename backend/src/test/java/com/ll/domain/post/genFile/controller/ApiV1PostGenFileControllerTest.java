@@ -1,6 +1,7 @@
 package com.ll.domain.post.genFile.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -8,7 +9,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ll.domain.member.member.service.MemberService;
 import com.ll.domain.post.genFile.entity.PostGenFile;
+import com.ll.domain.post.genFile.entity.PostGenFile.TypeCode;
+import com.ll.domain.post.post.entity.Post;
 import com.ll.domain.post.post.service.PostService;
+import com.ll.global.app.AppConfig;
+import com.ll.util.Ut;
+import java.io.FileInputStream;
 import java.util.List;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +22,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -40,7 +48,7 @@ class ApiV1PostGenFileControllerTest {
     void t1() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/v1/posts/8/genFiles")
+                        get("/api/v1/posts/9/genFiles")
                 )
                 .andDo(print());
 
@@ -71,7 +79,51 @@ class ApiV1PostGenFileControllerTest {
                     .andExpect(
                             jsonPath("$[%d].originalFileName".formatted(i)).value(postGenFile.getOriginalFileName()))
                     .andExpect(jsonPath("$[%d].downloadUrl".formatted(i)).value(postGenFile.getDownloadUrl()))
-                    .andExpect(jsonPath("$[%d].publicUrl".formatted(i)).value(postGenFile.getPublicUrl()));
+                    .andExpect(jsonPath("$[%d].publicUrl".formatted(i)).value(postGenFile.getPublicUrl()))
+                    .andExpect(jsonPath("$[%d].fileName".formatted(i)).value(postGenFile.getFileName()));
         }
+    }
+
+    @Test
+    @DisplayName("새 파일 등록")
+    @WithUserDetails("user4")
+    void t2() throws Exception {
+        String newFilePath = Ut.file.downloadByHttp("https://picsum.photos/id/237/200/300", AppConfig.getTempDirPath());
+
+        ResultActions resultActions = mvc
+                .perform(
+                        multipart("/api/v1/posts/9/genFiles/" + TypeCode.attachment)
+                                .file(new MockMultipartFile("file", "300.jpg", "image/jpeg",
+                                        new FileInputStream(newFilePath)))
+                )
+                .andDo(print());
+
+        Post post = postService.findById(9).get();
+        System.out.println(post.getGenFiles().size());
+        List<PostGenFile> genFiles = post.getGenFiles();
+
+        resultActions
+                .andExpect(handler().handlerType(ApiV1PostGenFileController.class))
+                .andExpect(handler().methodName("makeNewFile"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.resultCode").value("201-1"))
+                .andExpect(jsonPath("$.msg").value(Matchers.containsString("번 파일이 생성되었습니다.")))
+                .andExpect(jsonPath("$.data.id").isNumber())
+                .andExpect(jsonPath("$.data.createDate").isString())
+                .andExpect(jsonPath("$.data.modifyDate").isString())
+                .andExpect(jsonPath("$.data.postId").value(9))
+                .andExpect(jsonPath("$.data.typeCode").value(TypeCode.attachment.name()))
+                .andExpect(jsonPath("$.data.fileExtTypeCode").value("img"))
+                .andExpect(jsonPath("$.data.fileExtType2Code").value("jpg"))
+                .andExpect(jsonPath("$.data.fileSize").isNumber())
+                .andExpect(jsonPath("$.data.fileNo").value(4))
+                .andExpect(jsonPath("$.data.fileExt").value("jpg"))
+                .andExpect(jsonPath("$.data.fileDateDir").isString())
+                .andExpect(jsonPath("$.data.originalFileName").value("300.jpg"))
+                .andExpect(jsonPath("$.data.downloadUrl").isString())
+                .andExpect(jsonPath("$.data.publicUrl").isString())
+                .andExpect(jsonPath("$.data.fileName").isString());
+
+        Ut.file.rm(newFilePath);
     }
 }

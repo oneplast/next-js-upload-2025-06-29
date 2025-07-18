@@ -24,6 +24,14 @@ public class PostService {
         return postRepository.count();
     }
 
+    public long countByPublished(boolean published) {
+        return postRepository.countByPublished(published);
+    }
+
+    public long countByListed(boolean listed) {
+        return postRepository.countByListed(listed);
+    }
+
     public Post write(Member author, String title, String content, boolean published, boolean listed) {
         Post post = Post.builder()
                 .author(author)

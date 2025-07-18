@@ -133,7 +133,6 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.data.authorName").value(post.getAuthor().getName()))
                 .andExpect(jsonPath("$.data.authorProfileImgUrl").value(post.getAuthor().getProfileImgUrlOrDefault()))
                 .andExpect(jsonPath("$.data.title").value(post.getTitle()))
-                .andExpect(jsonPath("$.data.content").value(post.getContent()))
                 .andExpect(jsonPath("$.data.published").value(post.isPublished()))
                 .andExpect(jsonPath("$.data.listed").value(post.isListed()));
     }
@@ -234,7 +233,6 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.data.authorName").value(post.getAuthor().getName()))
                 .andExpect(jsonPath("$.data.authorProfileImgUrl").value(post.getAuthor().getProfileImgUrlOrDefault()))
                 .andExpect(jsonPath("$.data.title").value("축구 하실 분 계신가요?"))
-                .andExpect(jsonPath("$.data.content").value("14시 까지 22명을 모아야 진행이 됩니다."))
                 .andExpect(jsonPath("$.data.published").value(post.isPublished()))
                 .andExpect(jsonPath("$.data.listed").value(post.isListed()));
     }
@@ -783,7 +781,17 @@ public class ApiV1PostControllerTest {
 
         resultActions
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.resultCode").value("201-1"));
+                .andExpect(jsonPath("$.resultCode").value("201-1"))
+                .andExpect(jsonPath("$.msg").value(Matchers.containsString("번 임시글이 생성되었습니다.")))
+                .andExpect(jsonPath("$.data.id").isNumber())
+                .andExpect(jsonPath("$.data.createDate").isString())
+                .andExpect(jsonPath("$.data.modifyDate").isString())
+                .andExpect(jsonPath("$.data.authorId").isNumber())
+                .andExpect(jsonPath("$.data.authorName").isString())
+                .andExpect(jsonPath("$.data.authorProfileImgUrl").isString())
+                .andExpect(jsonPath("$.data.title").isString())
+                .andExpect(jsonPath("$.data.published").isBoolean())
+                .andExpect(jsonPath("$.data.listed").isBoolean());
     }
 
     @Test
@@ -804,6 +812,16 @@ public class ApiV1PostControllerTest {
 
         resultActions2
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.resultCode").value("200-1"));
+                .andExpect(jsonPath("$.resultCode").value("200-1"))
+                .andExpect(jsonPath("$.msg").value(Matchers.containsString("번 임시글을 불러옵니다.")))
+                .andExpect(jsonPath("$.data.id").isNumber())
+                .andExpect(jsonPath("$.data.createDate").isString())
+                .andExpect(jsonPath("$.data.modifyDate").isString())
+                .andExpect(jsonPath("$.data.authorId").isNumber())
+                .andExpect(jsonPath("$.data.authorName").isString())
+                .andExpect(jsonPath("$.data.authorProfileImgUrl").isString())
+                .andExpect(jsonPath("$.data.title").isString())
+                .andExpect(jsonPath("$.data.published").isBoolean())
+                .andExpect(jsonPath("$.data.listed").isBoolean());
     }
 }

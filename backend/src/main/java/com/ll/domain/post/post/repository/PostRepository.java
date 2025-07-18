@@ -12,4 +12,8 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
     Optional<Post> findFirstByOrderByIdDesc();
 
     Optional<Post> findTop1ByAuthorAndPublishedAndTitleOrderByIdDesc(Member author, boolean published, String title);
+
+    long countByPublished(boolean published);
+
+    long countByListed(boolean listed);
 }

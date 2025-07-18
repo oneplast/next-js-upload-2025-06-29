@@ -18,7 +18,7 @@ public class PostGenFileDto {
     @NonNull
     private String fileName;
     @NonNull
-    private String typeCode;
+    private PostGenFile.TypeCode typeCode;
     @NonNull
     private String fileExtTypeCode;
     @NonNull

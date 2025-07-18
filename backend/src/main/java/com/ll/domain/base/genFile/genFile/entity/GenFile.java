@@ -1,6 +1,5 @@
 package com.ll.domain.base.genFile.genFile.entity;
 
-import com.ll.domain.post.genFile.entity.PostGenFile;
 import com.ll.global.app.AppConfig;
 import com.ll.global.jpa.entity.BaseTime;
 import jakarta.persistence.MappedSuperclass;
@@ -16,7 +15,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @MappedSuperclass
 public abstract class GenFile extends BaseTime {
-    private String typeCode;
     private int fileNo;
     private String originalFileName;
     private String metadata;
@@ -28,7 +26,7 @@ public abstract class GenFile extends BaseTime {
     private int fileSize;
 
     public String getFilePath() {
-        return AppConfig.getGenFileDirPath() + "/" + getModelName() + "/" + typeCode + "/" + fileDateDir + "/"
+        return AppConfig.getGenFileDirPath() + "/" + getModelName() + "/" + getTypeCodeAsStr() + "/" + fileDateDir + "/"
                + fileName;
     }
 
@@ -46,8 +44,8 @@ public abstract class GenFile extends BaseTime {
             return false;
         }
 
-        PostGenFile that = (PostGenFile) o;
-        return fileNo == that.getFileNo() && Objects.equals(typeCode, that.getTypeCode());
+        GenFile that = (GenFile) o;
+        return fileNo == that.getFileNo() && Objects.equals(getTypeCodeAsStr(), that.getTypeCodeAsStr());
     }
 
     @Override
@@ -56,7 +54,7 @@ public abstract class GenFile extends BaseTime {
             return super.hashCode();
         }
 
-        return Objects.hash(super.hashCode(), typeCode, fileNo);
+        return Objects.hash(super.hashCode(), getTypeCodeAsStr(), fileNo);
     }
 
     private String getOwnerModelName() {
@@ -68,9 +66,11 @@ public abstract class GenFile extends BaseTime {
     }
 
     public String getPublicUrl() {
-        return AppConfig.getSiteBackUrl() + "/gen/" + getModelName() + "/" + typeCode + "/" + fileDateDir + "/"
+        return AppConfig.getSiteBackUrl() + "/gen/" + getModelName() + "/" + getTypeCodeAsStr() + "/" + fileDateDir + "/"
                + fileName;
     }
 
     abstract protected long getOwnerModelId();
+
+    abstract protected String getTypeCodeAsStr();
 }
