@@ -40,7 +40,7 @@ export default function WideHeaderContent({
               <TableOfContents />글
             </Link>
           </Button>
-          {isLogin && <PostWriteButton className="w-full justify-start" text />}
+          {isLogin && <PostWriteButton text />}
           {isLogin && (
             <Button variant="link" asChild>
               <Link href="/post/mine">

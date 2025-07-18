@@ -315,7 +315,7 @@ export interface components {
             published?: boolean;
             listed?: boolean;
         };
-        PostWithContentDto: {
+        PostDto: {
             /** Format: int64 */
             id: number;
             /** Format: date-time */
@@ -329,14 +329,11 @@ export interface components {
             title: string;
             published: boolean;
             listed: boolean;
-            content: string;
-            actorCanModify?: boolean;
-            actorCanDelete?: boolean;
         };
-        RsDataPostWithContentDto: {
+        RsDataPostDto: {
             resultCode: string;
             msg: string;
-            data: components["schemas"]["PostWithContentDto"];
+            data: components["schemas"]["PostDto"];
         };
         MemberModifyMeReqBody: {
             nickname: string;
@@ -372,7 +369,8 @@ export interface components {
             /** Format: int64 */
             postId?: number;
             fileName?: string;
-            typeCode?: string;
+            /** @enum {string} */
+            typeCode?: "attachment" | "thumbnail";
             fileExtTypeCode?: string;
             fileExtType2Code?: string;
             /** Format: int64 */
@@ -392,29 +390,6 @@ export interface components {
         };
         PostCommentWriteReqBody: {
             content: string;
-        };
-        PostDto: {
-            /** Format: int64 */
-            id: number;
-            /** Format: date-time */
-            createDate: string;
-            /** Format: date-time */
-            modifyDate: string;
-            /** Format: int64 */
-            authorId: number;
-            authorName: string;
-            authorProfileImgUrl: string;
-            title: string;
-            published: boolean;
-            listed: boolean;
-        };
-        PostMakeTempResponseBody: {
-            post: components["schemas"]["PostDto"];
-        };
-        RsDataPostMakeTempResponseBody: {
-            resultCode: string;
-            msg: string;
-            data: components["schemas"]["PostMakeTempResponseBody"];
         };
         MemberLoginReqBody: {
             username: string;
@@ -446,6 +421,24 @@ export interface components {
             /** Format: int64 */
             totalItems: number;
             items: components["schemas"]["PostDto"][];
+        };
+        PostWithContentDto: {
+            /** Format: int64 */
+            id: number;
+            /** Format: date-time */
+            createDate: string;
+            /** Format: date-time */
+            modifyDate: string;
+            /** Format: int64 */
+            authorId: number;
+            authorName: string;
+            authorProfileImgUrl: string;
+            title: string;
+            published: boolean;
+            listed: boolean;
+            content: string;
+            actorCanModify?: boolean;
+            actorCanDelete?: boolean;
         };
         PostStatisticsResBody: {
             /** Format: int64 */
@@ -606,7 +599,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json;charset=utf-8": components["schemas"]["RsDataPostWithContentDto"];
+                    "application/json;charset=utf-8": components["schemas"]["RsDataPostDto"];
                 };
             };
             /** @description Bad Request */
@@ -766,7 +759,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json;charset=utf-8": components["schemas"]["RsDataPostWithContentDto"];
+                    "application/json;charset=utf-8": components["schemas"]["RsDataPostDto"];
                 };
             };
             /** @description Bad Request */
@@ -786,7 +779,7 @@ export interface operations {
             header?: never;
             path: {
                 postId: number;
-                typeCode: string;
+                typeCode: "attachment" | "thumbnail";
             };
             cookie?: never;
         };
@@ -897,7 +890,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json;charset=utf-8": components["schemas"]["RsDataPostMakeTempResponseBody"];
+                    "application/json;charset=utf-8": components["schemas"]["RsDataPostDto"];
                 };
             };
             /** @description Bad Request */
