@@ -380,5 +380,9 @@ public class Ut {
                 return str;
             }
         }
+
+        public static String removeDomain(String url) {
+            return url.replaceFirst("https?://[^/]+", "");
+        }
     }
 }
