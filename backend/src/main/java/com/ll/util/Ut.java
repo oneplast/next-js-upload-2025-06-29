@@ -346,6 +346,18 @@ public class Ut {
 
             return filePath;
         }
+
+        @SneakyThrows
+        public static void copy(String filePath, String newFilePath) {
+            Path target = Path.of(newFilePath);
+            mkdir(target.getParent().toString());
+
+            Files.copy(
+                    Path.of(filePath),
+                    target,
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+        }
     }
 
     public static class cmd {

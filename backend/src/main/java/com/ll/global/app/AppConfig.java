@@ -2,11 +2,13 @@ package com.ll.global.app;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 
 @Configuration
 public class AppConfig {
@@ -75,5 +77,18 @@ public class AppConfig {
 
     public static String getTempDirPath() {
         return System.getProperty("java.io.tmpdir");
+    }
+
+    private static String resourcesSampleDirPath;
+
+    @SneakyThrows
+    public static String getResourcesSampleDirPath() {
+        if (resourcesSampleDirPath == null) {
+            ClassPathResource resource = new ClassPathResource("sample");
+
+            resourcesSampleDirPath = resource.getFile().getAbsolutePath();
+        }
+
+        return resourcesSampleDirPath;
     }
 }

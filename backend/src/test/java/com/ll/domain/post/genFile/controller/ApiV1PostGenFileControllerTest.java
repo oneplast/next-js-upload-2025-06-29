@@ -12,7 +12,7 @@ import com.ll.domain.post.genFile.entity.PostGenFile;
 import com.ll.domain.post.genFile.entity.PostGenFile.TypeCode;
 import com.ll.domain.post.post.entity.Post;
 import com.ll.domain.post.post.service.PostService;
-import com.ll.global.app.AppConfig;
+import com.ll.global.sampleResource.SampleResource;
 import com.ll.util.Ut;
 import java.io.FileInputStream;
 import java.util.List;
@@ -88,12 +88,12 @@ class ApiV1PostGenFileControllerTest {
     @DisplayName("새 파일 등록")
     @WithUserDetails("user4")
     void t2() throws Exception {
-        String newFilePath = Ut.file.downloadByHttp("https://picsum.photos/id/237/200/300", AppConfig.getTempDirPath());
+        String newFilePath = SampleResource.IMG_JPG_SAMPLE1.makeCopy();
 
         ResultActions resultActions = mvc
                 .perform(
                         multipart("/api/v1/posts/9/genFiles/" + TypeCode.attachment)
-                                .file(new MockMultipartFile("file", "300.jpg", "image/jpeg",
+                                .file(new MockMultipartFile("file", "200.jpg", "image/jpeg",
                                         new FileInputStream(newFilePath)))
                 )
                 .andDo(print());
@@ -119,7 +119,7 @@ class ApiV1PostGenFileControllerTest {
                 .andExpect(jsonPath("$.data.fileNo").value(4))
                 .andExpect(jsonPath("$.data.fileExt").value("jpg"))
                 .andExpect(jsonPath("$.data.fileDateDir").isString())
-                .andExpect(jsonPath("$.data.originalFileName").value("300.jpg"))
+                .andExpect(jsonPath("$.data.originalFileName").value("200.jpg"))
                 .andExpect(jsonPath("$.data.downloadUrl").isString())
                 .andExpect(jsonPath("$.data.publicUrl").isString())
                 .andExpect(jsonPath("$.data.fileName").isString());

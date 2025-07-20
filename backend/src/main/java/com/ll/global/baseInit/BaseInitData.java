@@ -7,6 +7,7 @@ import com.ll.domain.post.post.entity.Post;
 import com.ll.domain.post.post.service.PostService;
 import com.ll.global.app.AppConfig;
 import com.ll.global.app.CustomConfigProperties;
+import com.ll.global.sampleResource.SampleResource;
 import com.ll.util.Ut;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
@@ -131,27 +132,22 @@ public class BaseInitData {
 
         Post post9 = postService.write(memberUser4, "테이블테니스를 하실 분있나요?", "테이블테니스 강력 추천합니다.", true, true);
 
-        String genFileFilePath = Ut.file.downloadByHttp("https://picsum.photos/id/237/200/300",
-                AppConfig.getTempDirPath());
-        post9.addGenFile(TypeCode.attachment, genFileFilePath);
+        String genFile1FilePath = SampleResource.IMG_GIF_SAMPLE1.makeCopy();
+        post9.addGenFile(TypeCode.attachment, genFile1FilePath);
 
-        String genFile2FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/238/200/300",
-                AppConfig.getTempDirPath());
+        String genFile2FilePath = SampleResource.IMG_JPG_SAMPLE1.makeCopy();
         post9.addGenFile(TypeCode.attachment, genFile2FilePath);
 
         post9.deleteGenFile(TypeCode.attachment, 2);
 
-        genFile2FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/239/500/500",
-                AppConfig.getTempDirPath());
-        post9.addGenFile(TypeCode.thumbnail, genFile2FilePath);
+        genFile2FilePath = SampleResource.IMG_JPG_SAMPLE2.makeCopy();
+        post9.putGenFile(TypeCode.attachment, 3, genFile2FilePath);
 
-        String newGenFile2FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/240/600/500",
-                AppConfig.getTempDirPath());
-        post9.modifyGenFile(TypeCode.thumbnail, 1, newGenFile2FilePath);
+        String genFile3FilePath = SampleResource.IMG_JPG_SAMPLE3.makeCopy();
+        post9.addGenFile(TypeCode.thumbnail, genFile3FilePath);
 
-        String genFile3FilePath = Ut.file.downloadByHttp("https://picsum.photos/id/241/500/500",
-                AppConfig.getTempDirPath());
-        post9.putGenFile(TypeCode.attachment, 3, genFile3FilePath);
+        String newGenFile3FilePath = SampleResource.IMG_JPG_SAMPLE4.makeCopy();
+        post9.modifyGenFile(TypeCode.thumbnail, 1, newGenFile3FilePath);
 
         IntStream.rangeClosed(10, 100).forEach(
                 i -> postService.write(
