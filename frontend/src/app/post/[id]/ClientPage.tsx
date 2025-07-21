@@ -87,11 +87,16 @@ export default function ClientPage({
           <div className="whitespace-pre-line">{post.content}</div>
         </CardContent>
         <CardFooter>
-          <div className="-mx-4">
+          <div className="grid">
             {postGenFiles
               .filter((file) => file.typeCode === "attachment")
               .map((file) => (
-                <Button key={file.id} variant="link" asChild>
+                <Button
+                  key={file.id}
+                  variant="link"
+                  asChild
+                  className="justify-start"
+                >
                   <a
                     href={file.downloadUrl}
                     className="flex items-center gap-2"
@@ -106,7 +111,15 @@ export default function ClientPage({
                         className="align-self h-[16px] w-[16px]"
                       />
                     )}
-                    <span>{file.originalFileName} 다운로드</span>
+                    <span>
+                      {file.originalFileName}(
+                      {(file.fileSize ?? 0) >= 1024 * 1024
+                        ? `${((file.fileSize ?? 0) / (1024 * 1024)).toFixed(1)}MB`
+                        : (file.fileSize ?? 0) >= 1024
+                          ? `${((file.fileSize ?? 0) / 1024).toFixed(1)}KB`
+                          : `${file.fileSize ?? 0}B`}
+                      ) 다운로드
+                    </span>
                   </a>
                 </Button>
               ))}
