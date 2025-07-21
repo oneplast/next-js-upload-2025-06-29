@@ -20,7 +20,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { Download, ListX, Lock } from "lucide-react";
+import { Download, Eye, ListX, Lock } from "lucide-react";
 
 export default function ClientPage({
   post,
@@ -87,41 +87,44 @@ export default function ClientPage({
           <div className="whitespace-pre-line">{post.content}</div>
         </CardContent>
         <CardFooter>
-          <div className="grid">
+          <div className="grid gap-4">
             {postGenFiles
               .filter((file) => file.typeCode === "attachment")
               .map((file) => (
-                <Button
-                  key={file.id}
-                  variant="link"
-                  asChild
-                  className="justify-start"
-                >
-                  <a
-                    href={file.downloadUrl}
-                    className="flex items-center gap-2"
-                  >
-                    <Download />
-                    {file.fileExtTypeCode === "img" && (
-                      <Image
-                        src={file.publicUrl as string}
-                        alt={file.originalFileName as string}
-                        width={16}
-                        height={16}
-                        className="align-self h-[16px] w-[16px]"
-                      />
-                    )}
-                    <span>
-                      {file.originalFileName}(
-                      {(file.fileSize ?? 0) >= 1024 * 1024
-                        ? `${((file.fileSize ?? 0) / (1024 * 1024)).toFixed(1)}MB`
-                        : (file.fileSize ?? 0) >= 1024
-                          ? `${((file.fileSize ?? 0) / 1024).toFixed(1)}KB`
-                          : `${file.fileSize ?? 0}B`}
-                      ) 다운로드
-                    </span>
-                  </a>
-                </Button>
+                <div key={file.id} className="grid">
+                  <Button variant="link" asChild className="justify-start">
+                    <a
+                      href={file.downloadUrl}
+                      className="flex items-center gap-2"
+                    >
+                      <Download />
+                      {file.fileExtTypeCode === "img" && (
+                        <Image
+                          src={file.publicUrl as string}
+                          alt={file.originalFileName as string}
+                          width={16}
+                          height={16}
+                          className="align-self h-[16px] w-[16px]"
+                        />
+                      )}
+                      <span>
+                        {file.originalFileName}(
+                        {(file.fileSize ?? 0) >= 1024 * 1024
+                          ? `${((file.fileSize ?? 0) / (1024 * 1024)).toFixed(1)}MB`
+                          : (file.fileSize ?? 0) >= 1024
+                            ? `${((file.fileSize ?? 0) / 1024).toFixed(1)}KB`
+                            : `${file.fileSize ?? 0}B`}
+                        ) 다운로드
+                      </span>
+                    </a>
+                  </Button>
+                  <Button variant="link" className="justify-start" asChild>
+                    <Link href={`/post/${post.id}/genFilePreview`}>
+                      <Eye />
+                      <span>미리보기</span>
+                    </Link>
+                  </Button>
+                </div>
               ))}
           </div>
         </CardFooter>
