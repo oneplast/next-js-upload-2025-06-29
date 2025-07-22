@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 
+import { getDateHr } from "@/lib/business/utils";
+
 import { useGlobalLoginMember } from "@/stores/auth/loginMember";
 
 import {
@@ -37,15 +39,7 @@ export default function ClientPage() {
           <div className="my-4">
             <div className="text-sm text-muted-foreground">
               <span>가입날짜 : </span>
-              <span>
-                {new Date(loginMember.createDate).toLocaleString("ko-KR", {
-                  year: "2-digit",
-                  month: "2-digit",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </span>
+              <span>{getDateHr(loginMember.createDate)}</span>
             </div>
           </div>
         </CardContent>

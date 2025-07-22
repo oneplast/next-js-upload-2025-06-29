@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { components } from "@/lib/backend/apiV1/schema";
+import { getDateHr, getFileSizeHr } from "@/lib/business/utils";
 
 import { LoginMemberContext } from "@/stores/auth/loginMember";
 
@@ -85,6 +86,13 @@ export default function ClientPage({
         </CardHeader>
         <CardContent>
           <div className="whitespace-pre-line">{post.content}</div>
+          <div>
+            {post.createDate != post.modifyDate && (
+              <p className="text-xs text-muted-foreground">
+                {getDateHr(post.modifyDate)}에 수정됨
+              </p>
+            )}
+          </div>
         </CardContent>
         <CardFooter>
           <div className="grid gap-4">
@@ -109,12 +117,7 @@ export default function ClientPage({
                       )}
                       <span>
                         {file.originalFileName}(
-                        {(file.fileSize ?? 0) >= 1024 * 1024
-                          ? `${((file.fileSize ?? 0) / (1024 * 1024)).toFixed(1)}MB`
-                          : (file.fileSize ?? 0) >= 1024
-                            ? `${((file.fileSize ?? 0) / 1024).toFixed(1)}KB`
-                            : `${file.fileSize ?? 0}B`}
-                        ) 다운로드
+                        {getFileSizeHr(file.fileSize ?? 0)}) 다운로드
                       </span>
                     </a>
                   </Button>

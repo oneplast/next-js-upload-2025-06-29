@@ -32,6 +32,7 @@ import {
 
 import { ListX, Lock, Search, X } from "lucide-react";
 
+import { getDateHr } from "../utils";
 import PaginationType1Responsive from "./PaginationType1Responsive";
 
 interface PostListProps {
@@ -261,13 +262,7 @@ export default function PostList({
                           {item.authorName}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {new Date(item.createDate).toLocaleString("ko-KR", {
-                            year: "2-digit",
-                            month: "2-digit",
-                            day: "2-digit",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                          {getDateHr(item.createDate)}
                         </p>
                       </div>
                     </div>
