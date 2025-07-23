@@ -122,7 +122,7 @@ export default function ClientPage({
                     </a>
                   </Button>
                   <Button variant="link" className="justify-start" asChild>
-                    <Link href={`/post/${post.id}/genFilePreview`}>
+                    <Link href={`/post/${post.id}/genFilePreview/${file.id}`}>
                       <Eye />
                       <span>미리보기</span>
                     </Link>

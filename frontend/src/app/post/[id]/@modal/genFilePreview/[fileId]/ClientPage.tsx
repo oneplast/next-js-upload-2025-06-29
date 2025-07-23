@@ -1,7 +1,5 @@
 "use client";
 
-import { use } from "react";
-
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -14,10 +12,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export default function Page({ params }: { params: Promise<{ id: string }> }) {
+export default function ClientPage({
+  id,
+  fileId,
+}: {
+  id: string;
+  fileId: string;
+}) {
   const router = useRouter();
-
-  const { id } = use(params);
 
   return (
     <Dialog
@@ -30,17 +32,18 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         <DialogHeader>
           <DialogTitle>파일 미리보기</DialogTitle>
           <DialogDescription>{id}번 글의 파일(sample1.jpg)</DialogDescription>
-          <DialogFooter className="gap-2">
-            <Button
-              variant="outline"
-              onClick={() => {
-                router.back();
-              }}
-            >
-              닫기
-            </Button>
-          </DialogFooter>
         </DialogHeader>
+        <div>파일번호 : {fileId}</div>
+        <DialogFooter className="gap-2">
+          <Button
+            variant="outline"
+            onClick={() => {
+              router.back();
+            }}
+          >
+            닫기
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
