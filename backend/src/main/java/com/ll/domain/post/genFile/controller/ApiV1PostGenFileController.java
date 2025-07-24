@@ -76,4 +76,17 @@ public class ApiV1PostGenFileController {
                 .map(PostGenFileDto::new)
                 .toList();
     }
+
+    @GetMapping("/{id}")
+    @Transactional(readOnly = true)
+    @Operation(summary = "단건조회")
+    public PostGenFileDto item(@PathVariable long postId, @PathVariable long id) {
+        Post post = postService.findById(postId).orElseThrow(
+                () -> new ServiceException("404-1", "%d번 글은 존재하지 않습니다.".formatted(postId)));
+
+        PostGenFile postGenFile = post.getGenFileById(id).orElseThrow(
+                () -> new ServiceException("404-2", "%d번 파일은 존재하지 않습니다.".formatted(id)));
+
+        return new PostGenFileDto(postGenFile);
+    }
 }

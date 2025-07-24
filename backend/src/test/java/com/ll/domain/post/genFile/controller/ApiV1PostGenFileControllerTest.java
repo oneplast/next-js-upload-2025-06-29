@@ -57,7 +57,7 @@ class ApiV1PostGenFileControllerTest {
                 .andExpect(handler().methodName("items"))
                 .andExpect(status().isOk());
 
-        List<PostGenFile> postGenFiles = postService.findById(8).get().getGenFiles();
+        List<PostGenFile> postGenFiles = postService.findById(9).get().getGenFiles();
 
         for (int i = 0; i < postGenFiles.size(); i++) {
             PostGenFile postGenFile = postGenFiles.get(i);
@@ -69,7 +69,7 @@ class ApiV1PostGenFileControllerTest {
                     .andExpect(jsonPath("$[%d].modifyDate".formatted(i)).value(
                             Matchers.startsWith(postGenFile.getModifyDate().toString().substring(0, 20))))
                     .andExpect(jsonPath("$[%d].postId".formatted(i)).value(postGenFile.getPost().getId()))
-                    .andExpect(jsonPath("$[%d].typeCode".formatted(i)).value(postGenFile.getTypeCode()))
+                    .andExpect(jsonPath("$[%d].typeCode".formatted(i)).value(postGenFile.getTypeCode().name()))
                     .andExpect(jsonPath("$[%d].fileExtTypeCode".formatted(i)).value(postGenFile.getFileExtTypeCode()))
                     .andExpect(jsonPath("$[%d].fileExtType2Code".formatted(i)).value(postGenFile.getFileExtType2Code()))
                     .andExpect(jsonPath("$[%d].fileSize".formatted(i)).value(postGenFile.getFileSize()))
@@ -125,5 +125,41 @@ class ApiV1PostGenFileControllerTest {
                 .andExpect(jsonPath("$.data.fileName").isString());
 
         Ut.file.rm(newFilePath);
+    }
+
+    @Test
+    @DisplayName("단건 조회")
+    void t3() throws Exception {
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/v1/posts/9/genFiles/1")
+                )
+                .andDo(print());
+
+        resultActions
+                .andExpect(handler().handlerType(ApiV1PostGenFileController.class))
+                .andExpect(handler().methodName("item"))
+                .andExpect(status().isOk());
+
+        PostGenFile postGenFile = postService.findById(9).get().getGenFileById(1).get();
+
+        resultActions
+                .andExpect(jsonPath("$.id").value(postGenFile.getId()))
+                .andExpect(jsonPath("$.createDate").value(
+                        Matchers.startsWith(postGenFile.getCreateDate().toString().substring(0, 20))))
+                .andExpect(jsonPath("$.modifyDate").value(
+                        Matchers.startsWith(postGenFile.getModifyDate().toString().substring(0, 20))))
+                .andExpect(jsonPath("$.postId").value(postGenFile.getPost().getId()))
+                .andExpect(jsonPath("$.typeCode").value(postGenFile.getTypeCode().name()))
+                .andExpect(jsonPath("$.fileExtTypeCode").value(postGenFile.getFileExtTypeCode()))
+                .andExpect(jsonPath("$.fileExtType2Code").value(postGenFile.getFileExtType2Code()))
+                .andExpect(jsonPath("$.fileSize").value(postGenFile.getFileSize()))
+                .andExpect(jsonPath("$.fileNo").value(postGenFile.getFileNo()))
+                .andExpect(jsonPath("$.fileExt").value(postGenFile.getFileExt()))
+                .andExpect(jsonPath("$.fileDateDir").value(postGenFile.getFileDateDir()))
+                .andExpect(jsonPath("$.originalFileName").value(postGenFile.getOriginalFileName()))
+                .andExpect(jsonPath("$.downloadUrl").value(postGenFile.getDownloadUrl()))
+                .andExpect(jsonPath("$.publicUrl").value(postGenFile.getPublicUrl()))
+                .andExpect(jsonPath("$.fileName").value(postGenFile.getFileName()));
     }
 }
