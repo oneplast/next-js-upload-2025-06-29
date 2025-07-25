@@ -189,6 +189,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/posts/{postId}/genFiles/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 단건조회 */
+        get: operations["item_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/posts/statistics": {
         parameters: {
             query?: never;
@@ -248,7 +265,7 @@ export interface paths {
             cookie?: never;
         };
         /** 회원 단건 조회 */
-        get: operations["item_1"];
+        get: operations["item_2"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1001,6 +1018,38 @@ export interface operations {
             };
         };
     };
+    item_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["PostGenFileDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+        };
+    };
     statistics: {
         parameters: {
             query?: never;
@@ -1098,7 +1147,7 @@ export interface operations {
             };
         };
     };
-    item_1: {
+    item_2: {
         parameters: {
             query?: never;
             header?: never;
