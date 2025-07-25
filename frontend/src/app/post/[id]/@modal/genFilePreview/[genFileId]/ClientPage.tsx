@@ -30,12 +30,14 @@ export default function ClientPage({
         router.back();
       }}
     >
-      <DialogContent>
+      <DialogContent className="max-w-[100dvh]">
         <DialogHeader>
           <DialogTitle>파일 미리보기</DialogTitle>
           <DialogDescription>{id}번 글의 파일(sample1.jpg)</DialogDescription>
         </DialogHeader>
-        <div>파일번호 : {JSON.stringify(genFile)}</div>
+        <div className="flex justify-center">
+          <img src={genFile.publicUrl} alt="" />
+        </div>
         <DialogFooter className="gap-2">
           <Button
             variant="outline"
