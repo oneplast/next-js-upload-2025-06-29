@@ -149,7 +149,30 @@ public class BaseInitData {
         String newGenFile3FilePath = SampleResource.IMG_JPG_SAMPLE4.makeCopy();
         post9.modifyGenFile(TypeCode.thumbnail, 1, newGenFile3FilePath);
 
-        IntStream.rangeClosed(10, 100).forEach(
+        Post post10 = postService.write(memberUser4, "테니스 하실 분있나요?", "테니스 강력 추천합니다.", true, true);
+
+        String genFile4FilePath = SampleResource.IMG_WEBP_SAMPLE1.makeCopy();
+        post10.addGenFile(TypeCode.attachment, genFile4FilePath);
+
+        String genFile5FilePath = SampleResource.AUDIO_M4A_SAMPLE1.makeCopy();
+        post10.addGenFile(TypeCode.attachment, genFile5FilePath);
+
+        String genFile6FilePath = SampleResource.AUDIO_MP3_SAMPLE1.makeCopy();
+        post10.addGenFile(TypeCode.attachment, genFile6FilePath);
+
+        String genFile7FilePath = SampleResource.AUDIO_MP3_SAMPLE2.makeCopy();
+        post10.addGenFile(TypeCode.attachment, genFile7FilePath);
+
+        String genFile8FilePath = SampleResource.VIDEO_MOV_SAMPLE1.makeCopy();
+        post10.addGenFile(TypeCode.attachment, genFile8FilePath);
+
+        String genFile9FilePath = SampleResource.VIDEO_MP4_SAMPLE1.makeCopy();
+        post10.addGenFile(TypeCode.attachment, genFile9FilePath);
+
+        String genFile10FilePath = SampleResource.VIDEO_MP4_SAMPLE2.makeCopy();
+        post10.addGenFile(TypeCode.attachment, genFile10FilePath);
+
+        IntStream.rangeClosed(11, 100).forEach(
                 i -> postService.write(
                         memberUser5,
                         "테스트 게시물 " + i,
