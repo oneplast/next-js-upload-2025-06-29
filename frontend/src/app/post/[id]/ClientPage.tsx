@@ -106,18 +106,9 @@ export default function ClientPage({
                       className="flex items-center gap-2"
                     >
                       <Download />
-                      {file.fileExtTypeCode === "img" && (
-                        <Image
-                          src={file.publicUrl as string}
-                          alt={file.originalFileName as string}
-                          width={16}
-                          height={16}
-                          className="align-self h-[16px] w-[16px]"
-                        />
-                      )}
                       <span>
-                        {file.originalFileName}(
-                        {getFileSizeHr(file.fileSize ?? 0)}) 다운로드
+                        {file.originalFileName}
+                        <br />({getFileSizeHr(file.fileSize ?? 0)}) 다운로드
                       </span>
                     </a>
                   </Button>

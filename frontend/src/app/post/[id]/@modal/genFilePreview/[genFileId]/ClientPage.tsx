@@ -41,14 +41,22 @@ export default function ClientPage({
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-center">
-          <img src={genFile.publicUrl} alt="" />
+          {genFile.fileExtTypeCode == "img" && (
+            <img src={genFile.publicUrl} alt="" />
+          )}
+          {genFile.fileExtTypeCode == "audio" && (
+            <audio src={genFile.publicUrl} controls />
+          )}
+          {genFile.fileExtTypeCode == "video" && (
+            <video src={genFile.publicUrl} controls />
+          )}
         </div>
         <Button variant="link" asChild className="justify-start">
           <a href={genFile.downloadUrl} className="flex items-center gap-2">
             <Download />
             <span>
-              {genFile.originalFileName}({getFileSizeHr(genFile.fileSize ?? 0)})
-              다운로드
+              {genFile.originalFileName}
+              <br />({getFileSizeHr(genFile.fileSize ?? 0)}) 다운로드
             </span>
           </a>
         </Button>
