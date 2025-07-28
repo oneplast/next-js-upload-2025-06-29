@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import client from "@/lib/backend/client";
 
 import { components } from "@/lib/backend/apiV1/schema";
+import { getUploadableInputAccept } from "@/lib/business/utils";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -169,6 +170,7 @@ export default function ClientPage({
                 <FormControl>
                   <Input
                     type="file"
+                    accept={getUploadableInputAccept()}
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       onChange(file);
