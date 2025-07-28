@@ -291,4 +291,8 @@ public class Post extends BaseTime {
 
         return new RsData<>("403-1", "작성자만 파일을 업로드할 수 있습니다.");
     }
+
+    public boolean isTemp() {
+        return !published && "임시글".equals(title);
+    }
 }

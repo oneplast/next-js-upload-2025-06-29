@@ -57,10 +57,16 @@ public class PostService {
     }
 
     public void modify(Post post, String title, String content, boolean published, boolean listed) {
+        boolean wasTemp = post.isTemp();
+
         post.setTitle(title);
         post.setContent(content);
         post.setPublished(published);
         post.setListed(listed);
+
+        if (wasTemp && !post.isTemp()) {
+            post.setCreateDateNow();
+        }
     }
 
     public void flush() {
