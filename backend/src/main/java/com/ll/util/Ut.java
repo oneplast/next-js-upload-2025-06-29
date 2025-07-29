@@ -124,8 +124,8 @@ public class Ut {
             put("application/x-7z-compressed", "7z");
             put("application/vnd.rar", "rar");
             put("audio/mpeg", "mp3");
-            put("audio/x-m4a", "m4a");
             put("audio/mp4", "m4a");
+            put("audio/x-m4a", "m4a");
             put("audio/wav", "wav");
             put("video/quicktime", "mov");
             put("video/mp4", "mp4");
@@ -360,6 +360,15 @@ public class Ut {
                     target,
                     StandardCopyOption.REPLACE_EXISTING
             );
+        }
+
+        public static String getContentType(String fileExt) {
+            return MIME_TYPE_MAP.entrySet()
+                    .stream()
+                    .filter(entry -> entry.getValue().equals(fileExt))
+                    .map(Map.Entry::getKey)
+                    .findFirst()
+                    .orElse("");
         }
     }
 

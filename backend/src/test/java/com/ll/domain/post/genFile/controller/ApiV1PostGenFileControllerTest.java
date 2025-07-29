@@ -92,9 +92,9 @@ class ApiV1PostGenFileControllerTest {
 
         ResultActions resultActions = mvc
                 .perform(
-                        multipart("/api/v1/posts/9/genFiles/" + TypeCode.attachment)
-                                .file(new MockMultipartFile("file", "200.jpg", "image/jpeg",
-                                        new FileInputStream(newFilePath)))
+                        multipart("/api/v1/posts/9/genFiles/" + TypeCode.attachment).file(new MockMultipartFile("files",
+                                SampleResource.IMG_JPG_SAMPLE1.getOriginalFileName(),
+                                SampleResource.IMG_JPG_SAMPLE1.getContentType(), new FileInputStream(newFilePath)))
                 )
                 .andDo(print());
 
@@ -104,25 +104,28 @@ class ApiV1PostGenFileControllerTest {
 
         resultActions
                 .andExpect(handler().handlerType(ApiV1PostGenFileController.class))
-                .andExpect(handler().methodName("makeNewFile"))
+                .andExpect(handler().methodName("makeNewItems"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.resultCode").value("201-1"))
-                .andExpect(jsonPath("$.msg").value(Matchers.containsString("번 파일이 생성되었습니다.")))
-                .andExpect(jsonPath("$.data.id").isNumber())
-                .andExpect(jsonPath("$.data.createDate").isString())
-                .andExpect(jsonPath("$.data.modifyDate").isString())
-                .andExpect(jsonPath("$.data.postId").value(9))
-                .andExpect(jsonPath("$.data.typeCode").value(TypeCode.attachment.name()))
-                .andExpect(jsonPath("$.data.fileExtTypeCode").value("img"))
-                .andExpect(jsonPath("$.data.fileExtType2Code").value("jpg"))
-                .andExpect(jsonPath("$.data.fileSize").isNumber())
-                .andExpect(jsonPath("$.data.fileNo").value(4))
-                .andExpect(jsonPath("$.data.fileExt").value("jpg"))
-                .andExpect(jsonPath("$.data.fileDateDir").isString())
-                .andExpect(jsonPath("$.data.originalFileName").value("200.jpg"))
-                .andExpect(jsonPath("$.data.downloadUrl").isString())
-                .andExpect(jsonPath("$.data.publicUrl").isString())
-                .andExpect(jsonPath("$.data.fileName").isString());
+                .andExpect(jsonPath("$.msg").value(Matchers.containsString("1개의 파일이 생성되었습니다.")))
+                .andExpect(jsonPath("$.data[0].id").isNumber())
+                .andExpect(jsonPath("$.data[0].createDate").isString())
+                .andExpect(jsonPath("$.data[0].modifyDate").isString())
+                .andExpect(jsonPath("$.data[0].postId").value(9))
+                .andExpect(jsonPath("$.data[0].typeCode").value(TypeCode.attachment.name()))
+                .andExpect(jsonPath("$.data[0].fileExtTypeCode").value(
+                        SampleResource.IMG_JPG_SAMPLE1.getFileExtTypeCode()))
+                .andExpect(jsonPath("$.data[0].fileExtType2Code").value(
+                        SampleResource.IMG_JPG_SAMPLE2.getFileExtType2Code()))
+                .andExpect(jsonPath("$.data[0].fileSize").isNumber())
+                .andExpect(jsonPath("$.data[0].fileNo").value(4))
+                .andExpect(jsonPath("$.data[0].fileExt").value(SampleResource.IMG_JPG_SAMPLE1.getFileExt()))
+                .andExpect(jsonPath("$.data[0].fileDateDir").isString())
+                .andExpect(jsonPath("$.data[0].originalFileName").value(
+                        SampleResource.IMG_JPG_SAMPLE1.getOriginalFileName()))
+                .andExpect(jsonPath("$.data[0].downloadUrl").isString())
+                .andExpect(jsonPath("$.data[0].publicUrl").isString())
+                .andExpect(jsonPath("$.data[0].fileName").isString());
 
         Ut.file.rm(newFilePath);
     }
@@ -161,5 +164,72 @@ class ApiV1PostGenFileControllerTest {
                 .andExpect(jsonPath("$.downloadUrl").value(postGenFile.getDownloadUrl()))
                 .andExpect(jsonPath("$.publicUrl").value(postGenFile.getPublicUrl()))
                 .andExpect(jsonPath("$.fileName").value(postGenFile.getFileName()));
+    }
+
+    @Test
+    @DisplayName("새 파일 등록(다건)")
+    @WithUserDetails("user4")
+    void t4() throws Exception {
+        String newFilePath1 = SampleResource.IMG_JPG_SAMPLE1.makeCopy();
+        String newFilePath2 = SampleResource.IMG_JPG_SAMPLE2.makeCopy();
+
+        ResultActions resultActions = mvc
+                .perform(
+                        multipart("/api/v1/posts/9/genFiles/" + TypeCode.attachment).file(
+                                        new MockMultipartFile("files", SampleResource.IMG_JPG_SAMPLE1.getOriginalFileName(),
+                                                SampleResource.IMG_JPG_SAMPLE1.getContentType(),
+                                                new FileInputStream(newFilePath1)))
+                                .file(new MockMultipartFile("files",
+                                        SampleResource.IMG_JPG_SAMPLE2.getOriginalFileName(),
+                                        SampleResource.IMG_JPG_SAMPLE2.getContentType(),
+                                        new FileInputStream(newFilePath2)))
+                )
+                .andDo(print());
+
+        resultActions
+                .andExpect(handler().handlerType(ApiV1PostGenFileController.class))
+                .andExpect(handler().methodName("makeNewItems"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.resultCode").value("201-1"))
+                .andExpect(jsonPath("$.msg").value("2개의 파일이 생성되었습니다."))
+                .andExpect(jsonPath("$.data[0].id").isNumber())
+                .andExpect(jsonPath("$.data[0].createDate").isString())
+                .andExpect(jsonPath("$.data[0].modifyDate").isString())
+                .andExpect(jsonPath("$.data[0].postId").value(9))
+                .andExpect(jsonPath("$.data[0].typeCode").value(PostGenFile.TypeCode.attachment.name()))
+                .andExpect(jsonPath("$.data[0].fileExtTypeCode").value(
+                        SampleResource.IMG_JPG_SAMPLE1.getFileExtTypeCode()))
+                .andExpect(jsonPath("$.data[0].fileExtType2Code").value(
+                        SampleResource.IMG_JPG_SAMPLE1.getFileExtType2Code()))
+                .andExpect(jsonPath("$.data[0].fileSize").isNumber())
+                .andExpect(jsonPath("$.data[0].fileNo").value(4))
+                .andExpect(jsonPath("$.data[0].fileExt").value(SampleResource.IMG_JPG_SAMPLE1.getFileExt()))
+                .andExpect(jsonPath("$.data[0].fileDateDir").isString())
+                .andExpect(jsonPath("$.data[0].originalFileName").value(
+                        SampleResource.IMG_JPG_SAMPLE1.getOriginalFileName()))
+                .andExpect(jsonPath("$.data[0].downloadUrl").isString())
+                .andExpect(jsonPath("$.data[0].publicUrl").isString())
+                .andExpect(jsonPath("$.data[0].fileName").isString())
+                .andExpect(jsonPath("$.data[0].id").isNumber())
+                .andExpect(jsonPath("$.data[1].createDate").isString())
+                .andExpect(jsonPath("$.data[1].modifyDate").isString())
+                .andExpect(jsonPath("$.data[1].postId").value(9))
+                .andExpect(jsonPath("$.data[1].typeCode").value(PostGenFile.TypeCode.attachment.name()))
+                .andExpect(jsonPath("$.data[1].fileExtTypeCode").value(
+                        SampleResource.IMG_JPG_SAMPLE2.getFileExtTypeCode()))
+                .andExpect(jsonPath("$.data[1].fileExtType2Code").value(
+                        SampleResource.IMG_JPG_SAMPLE2.getFileExtType2Code()))
+                .andExpect(jsonPath("$.data[1].fileSize").isNumber())
+                .andExpect(jsonPath("$.data[1].fileNo").value(5))
+                .andExpect(jsonPath("$.data[1].fileExt").value(SampleResource.IMG_JPG_SAMPLE2.getFileExt()))
+                .andExpect(jsonPath("$.data[1].fileDateDir").isString())
+                .andExpect(jsonPath("$.data[1].originalFileName").value(
+                        SampleResource.IMG_JPG_SAMPLE2.getOriginalFileName()))
+                .andExpect(jsonPath("$.data[1].downloadUrl").isString())
+                .andExpect(jsonPath("$.data[1].publicUrl").isString())
+                .andExpect(jsonPath("$.data[1].fileName").isString());
+
+        Ut.file.rm(newFilePath1);
+        Ut.file.rm(newFilePath2);
     }
 }

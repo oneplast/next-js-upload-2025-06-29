@@ -1,11 +1,18 @@
 server:
   port: 8080
+  tomcat:
+    max-swallow-size: ${spring.servlet.multipart.max-request-size}
+    max-http-form-post-size: ${spring.servlet.multipart.max-request-size}
 spring:
   application:
     name: next-js-upload-2025-06-29
   profiles:
     active: dev
     include: secret
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 500MB
   web:
     resources:
       add-mappings: false

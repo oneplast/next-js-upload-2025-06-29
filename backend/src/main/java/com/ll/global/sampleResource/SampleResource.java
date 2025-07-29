@@ -53,4 +53,12 @@ public enum SampleResource {
 
         return newFilePath;
     }
+
+    public String getOriginalFileName() {
+        return getFileName();
+    }
+
+    public String getContentType() {
+        return Ut.file.getContentType(getFileExt());
+    }
 }

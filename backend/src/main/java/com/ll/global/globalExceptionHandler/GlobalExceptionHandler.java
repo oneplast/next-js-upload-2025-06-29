@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 @ControllerAdvice
@@ -31,6 +33,35 @@ public class GlobalExceptionHandler {
                 .body(new RsData<>(
                         "404-1",
                         "해당 데이터가 존재하지 않습니다."
+                ));
+    }
+
+    @ExceptionHandler(SizeLimitExceededException.class)
+    public ResponseEntity<RsData<Empty>> handle(SizeLimitExceededException ex) {
+        if (AppConfig.isNotProd()) {
+            ex.printStackTrace();
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new RsData<>(
+                        "413-1",
+                        "업로드 용량은 %s(을)를 초과할 수 없습니다.".formatted(AppConfig.getSpringServletMultipartMaxRequestSize())
+                ));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<RsData<Empty>> handle(MaxUploadSizeExceededException ex) {
+        if (AppConfig.isNotProd()) {
+            ex.printStackTrace();
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new RsData<>(
+                        "413-2",
+                        "업로드되는 개별 파일의 용량은 %s(을)를 초과할 수 없습니다.".formatted(
+                                AppConfig.getSpringServletMultipartMaxFileSize())
                 ));
     }
 
