@@ -39,7 +39,7 @@ const wrtieFormSchema = z.object({
     .max(10_000_000, "내용은 1,000만자 이하여야 합니다."),
   published: z.boolean().optional(),
   listed: z.boolean().optional(),
-  attachment_0: z.instanceof(File).optional(),
+  attachment_0: z.array(z.instanceof(File)).optional(),
 });
 
 type WriteFormInputs = z.infer<typeof wrtieFormSchema>;
@@ -84,7 +84,9 @@ export default function ClientPage({
     // 파일 업로드 처리
     if (data.attachment_0) {
       const formData = new FormData();
-      formData.append("file", data.attachment_0);
+
+      for (const file of [...data.attachment_0].reverse())
+        formData.append("files", file);
 
       const uploadResponse = await client.POST(
         "/api/v1/posts/{postId}/genFiles/{typeCode}",
@@ -95,7 +97,7 @@ export default function ClientPage({
               typeCode: "attachment",
             },
           },
-          body: formData,
+          body: formData as any, // eslint-disable-line @typescript-eslint/no-explicit-any
         },
       );
 
@@ -166,14 +168,15 @@ export default function ClientPage({
             name="attachment_0"
             render={({ field: { onChange, ...field } }) => (
               <FormItem>
-                <FormLabel>첨부파일</FormLabel>
+                <FormLabel>첨부파일(드래그 앤 드롭 가능, 최대 5개)</FormLabel>
                 <FormControl>
                   <Input
                     type="file"
+                    multiple
                     accept={getUploadableInputAccept()}
                     onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      onChange(file);
+                      const files = Array.from(e.target.files || []);
+                      onChange(files);
                     }}
                     {...field}
                     value={undefined}
