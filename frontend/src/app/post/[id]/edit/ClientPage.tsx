@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import client from "@/lib/backend/client";
@@ -188,6 +189,11 @@ export default function ClientPage({
               </FormItem>
             )}
           />
+          <Button variant="outline" asChild>
+            <Link href={`/post/${post.id}/genFile/listForEdit`}>
+              기존 첨부파일 변경/삭제
+            </Link>
+          </Button>
           <FormField
             control={form.control}
             name="content"
@@ -197,7 +203,7 @@ export default function ClientPage({
                 <FormControl>
                   <Textarea
                     {...field}
-                    className="h-[calc(100dvh-460px)] min-h-[300px]"
+                    className="h-[calc(100dvh-520px)] min-h-[300px]"
                     placeholder={post.content}
                   />
                 </FormControl>

@@ -25,10 +25,10 @@ import { Download, Eye, ListX, Lock } from "lucide-react";
 
 export default function ClientPage({
   post,
-  postGenFiles,
+  genFiles,
 }: {
   post: components["schemas"]["PostWithContentDto"];
-  postGenFiles: components["schemas"]["PostGenFileDto"][];
+  genFiles: components["schemas"]["PostGenFileDto"][];
 }) {
   const { loginMember, isAdmin } = use(LoginMemberContext);
 
@@ -96,24 +96,26 @@ export default function ClientPage({
         </CardContent>
         <CardFooter>
           <div className="grid gap-4">
-            {postGenFiles
-              .filter((file) => file.typeCode === "attachment")
-              .map((file) => (
-                <div key={file.id} className="grid">
+            {genFiles
+              .filter((genFile) => genFile.typeCode === "attachment")
+              .map((genFile) => (
+                <div key={genFile.id} className="grid">
                   <Button variant="link" asChild className="justify-start">
                     <a
-                      href={file.downloadUrl}
+                      href={genFile.downloadUrl}
                       className="flex items-center gap-2"
                     >
                       <Download />
                       <span>
-                        {file.originalFileName}
-                        <br />({getFileSizeHr(file.fileSize ?? 0)}) 다운로드
+                        {genFile.originalFileName}
+                        <br />({getFileSizeHr(genFile.fileSize ?? 0)}) 다운로드
                       </span>
                     </a>
                   </Button>
                   <Button variant="link" className="justify-start" asChild>
-                    <Link href={`/post/${post.id}/genFilePreview/${file.id}`}>
+                    <Link
+                      href={`/post/${post.id}/genFile/${genFile.id}/preview`}
+                    >
                       <Eye />
                       <span>미리보기</span>
                     </Link>
