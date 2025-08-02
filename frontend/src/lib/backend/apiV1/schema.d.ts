@@ -92,8 +92,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 등록 */
-        post: operations["makeNewFile"];
+        /** 다건등록 */
+        post: operations["makeNewItems"];
         delete?: never;
         options?: never;
         head?: never;
@@ -200,7 +200,8 @@ export interface paths {
         get: operations["item_1"];
         put?: never;
         post?: never;
-        delete?: never;
+        /** 삭제 */
+        delete: operations["delete_2"];
         options?: never;
         head?: never;
         patch?: never;
@@ -400,10 +401,10 @@ export interface components {
             downloadUrl?: string;
             publicUrl?: string;
         };
-        RsDataPostGenFileDto: {
+        RsDataListPostGenFileDto: {
             resultCode: string;
             msg: string;
-            data: components["schemas"]["PostGenFileDto"];
+            data: components["schemas"]["PostGenFileDto"][];
         };
         PostCommentWriteReqBody: {
             content: string;
@@ -790,7 +791,7 @@ export interface operations {
             };
         };
     };
-    makeNewFile: {
+    makeNewItems: {
         parameters: {
             query?: never;
             header?: never;
@@ -802,7 +803,10 @@ export interface operations {
         };
         requestBody?: {
             content: {
-                "multipart/form-data": unknown;
+                "multipart/form-data": {
+                    /** @description 업로드할 파일 목록 */
+                    files: string[];
+                };
             };
         };
         responses: {
@@ -812,7 +816,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json;charset=utf-8": components["schemas"]["RsDataPostGenFileDto"];
+                    "application/json;charset=utf-8": components["schemas"]["RsDataListPostGenFileDto"];
                 };
             };
             /** @description Bad Request */
@@ -1037,6 +1041,38 @@ export interface operations {
                 };
                 content: {
                     "application/json;charset=utf-8": components["schemas"]["PostGenFileDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+        };
+    };
+    delete_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["RsDataEmpty"];
                 };
             };
             /** @description Bad Request */
