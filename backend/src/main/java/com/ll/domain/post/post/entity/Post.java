@@ -221,11 +221,12 @@ public class Post extends BaseTime {
 
     public void deleteGenFile(PostGenFile.TypeCode typeCode, int fileNo) {
         getGenFileByTypeCodeAndFileNo(typeCode, fileNo)
-                .ifPresent(genFile -> {
-                    String filePath = genFile.getFilePath();
-                    genFiles.remove(genFile);
-                    Ut.file.rm(filePath);
-                });
+                .ifPresent(this::deleteGenFile);
+    }
+
+    public void deleteGenFile(PostGenFile postGenFile) {
+        Ut.file.rm(postGenFile.getFilePath());
+        genFiles.remove(postGenFile);
     }
 
     public void modifyGenFile(PostGenFile.TypeCode typeCode, int fileNo, String filePath) {

@@ -1,5 +1,6 @@
 package com.ll.domain.post.genFile.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -12,6 +13,7 @@ import com.ll.domain.post.genFile.entity.PostGenFile;
 import com.ll.domain.post.genFile.entity.PostGenFile.TypeCode;
 import com.ll.domain.post.post.entity.Post;
 import com.ll.domain.post.post.service.PostService;
+import com.ll.global.app.AppConfig;
 import com.ll.global.sampleResource.SampleResource;
 import com.ll.util.Ut;
 import java.io.FileInputStream;
@@ -231,5 +233,29 @@ class ApiV1PostGenFileControllerTest {
 
         Ut.file.rm(newFilePath1);
         Ut.file.rm(newFilePath2);
+    }
+
+    @Test
+    @DisplayName("파일 삭제")
+    @WithUserDetails("user4")
+    void t5() throws Exception {
+        PostGenFile postGenFile = postService.findById(9).get().getGenFileById(1).get();
+
+        String originalFilePath = postGenFile.getFilePath();
+        String copyFilePath = AppConfig.getTempDirPath() + "/copy_" + postGenFile.getFileName();
+        Ut.file.copy(originalFilePath, copyFilePath);
+
+        ResultActions resultActions = mvc
+                .perform(
+                        delete("/api/v1/posts/9/genFiles/1")
+                ).andDo(print());
+
+        resultActions
+                .andExpect(handler().handlerType(ApiV1PostGenFileController.class))
+                .andExpect(handler().methodName("delete"))
+                .andExpect(jsonPath("$.resultCode").value("200-1"))
+                .andExpect(jsonPath("$.msg").value("1번 파일이 삭제되었습니다."));
+
+        Ut.file.mv(copyFilePath, originalFilePath);
     }
 }
