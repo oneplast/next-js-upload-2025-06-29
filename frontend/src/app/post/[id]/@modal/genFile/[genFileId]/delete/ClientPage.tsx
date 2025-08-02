@@ -45,7 +45,8 @@ export default function ClientPage({
 
     toast(response.data.msg);
 
-    router.replace(`/post/${id}/genFile/listForEdit`);
+    sessionStorage.setItem("needToRefresh", "true");
+    router.back();
   };
 
   return (

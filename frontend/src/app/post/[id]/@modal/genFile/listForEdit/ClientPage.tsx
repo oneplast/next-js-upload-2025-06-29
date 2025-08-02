@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -26,6 +28,15 @@ export default function ClientPage({
   genFiles: components["schemas"]["PostGenFileDto"][];
 }) {
   const router = useRouter();
+
+  useEffect(() => {
+    const needToRefresh = window.sessionStorage.getItem("needToRefresh");
+
+    if (needToRefresh === "true") {
+      window.sessionStorage.removeItem("needToRefresh");
+      router.refresh();
+    }
+  }, [router]);
 
   return (
     <Dialog
