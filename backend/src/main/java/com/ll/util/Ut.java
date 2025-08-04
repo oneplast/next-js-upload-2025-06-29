@@ -385,7 +385,7 @@ public class Ut {
 
         public static void run(String cmd) {
             try {
-                ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", cmd);
+                ProcessBuilder processBuilder = new ProcessBuilder("C:/Program Files/Git/bin/bash.exe", "-c", cmd);
                 processBuilder.inheritIO();
                 Process process = processBuilder.start();
                 process.waitFor(1, TimeUnit.MINUTES);
