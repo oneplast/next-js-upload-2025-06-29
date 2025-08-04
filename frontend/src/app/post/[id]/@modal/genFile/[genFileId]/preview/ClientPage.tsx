@@ -33,7 +33,7 @@ export default function ClientPage({
         router.back();
       }}
     >
-      <DialogContent className="max-w-[100dvh]">
+      <DialogContent className="max-w-[100dvh] max-h-[100dvh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>파일 미리보기</DialogTitle>
           <DialogDescription>

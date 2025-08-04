@@ -4,6 +4,25 @@
  */
 
 export interface paths {
+    "/api/v1/posts/{postId}/genFiles/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 단건조회 */
+        get: operations["item"];
+        /** 수정 */
+        put: operations["modify"];
+        post?: never;
+        /** 삭제 */
+        delete: operations["delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/posts/{postId}/comments/{id}": {
         parameters: {
             query?: never;
@@ -13,10 +32,10 @@ export interface paths {
         };
         get?: never;
         /** 수정 */
-        put: operations["modify"];
+        put: operations["modify_1"];
         post?: never;
         /** 삭제 */
-        delete: operations["delete"];
+        delete: operations["delete_1"];
         options?: never;
         head?: never;
         patch?: never;
@@ -33,15 +52,15 @@ export interface paths {
          * 단건 조회
          * @description 비밀글은 작성자만 조회 가능
          */
-        get: operations["item"];
+        get: operations["item_1"];
         /** 수정 */
-        put: operations["modify_1"];
+        put: operations["modify_2"];
         post?: never;
         /**
          * 삭제
          * @description 작성자 본인 뿐만 아니라 관리자도 삭제 가능
          */
-        delete: operations["delete_1"];
+        delete: operations["delete_2"];
         options?: never;
         head?: never;
         patch?: never;
@@ -189,24 +208,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/posts/{postId}/genFiles/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 단건조회 */
-        get: operations["item_1"];
-        put?: never;
-        post?: never;
-        /** 삭제 */
-        delete: operations["delete_2"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/posts/statistics": {
         parameters: {
             query?: never;
@@ -305,6 +306,35 @@ export interface components {
             msg: string;
             data: components["schemas"]["Empty"];
         };
+        PostGenFileDto: {
+            /** Format: int64 */
+            id?: number;
+            /** Format: date-time */
+            createDate?: string;
+            /** Format: date-time */
+            modifyDate?: string;
+            /** Format: int64 */
+            postId?: number;
+            fileName?: string;
+            /** @enum {string} */
+            typeCode?: "attachment" | "thumbnail";
+            fileExtTypeCode?: string;
+            fileExtType2Code?: string;
+            /** Format: int64 */
+            fileSize?: number;
+            /** Format: int64 */
+            fileNo?: number;
+            fileExt?: string;
+            fileDateDir?: string;
+            originalFileName?: string;
+            downloadUrl?: string;
+            publicUrl?: string;
+        };
+        RsDataPostGenFileDto: {
+            resultCode: string;
+            msg: string;
+            data: components["schemas"]["PostGenFileDto"];
+        };
         PostCommentModifyReqBody: {
             content: string;
         };
@@ -376,30 +406,6 @@ export interface components {
             content: string;
             published?: boolean;
             listed?: boolean;
-        };
-        PostGenFileDto: {
-            /** Format: int64 */
-            id?: number;
-            /** Format: date-time */
-            createDate?: string;
-            /** Format: date-time */
-            modifyDate?: string;
-            /** Format: int64 */
-            postId?: number;
-            fileName?: string;
-            /** @enum {string} */
-            typeCode?: "attachment" | "thumbnail";
-            fileExtTypeCode?: string;
-            fileExtType2Code?: string;
-            /** Format: int64 */
-            fileSize?: number;
-            /** Format: int64 */
-            fileNo?: number;
-            fileExt?: string;
-            fileDateDir?: string;
-            originalFileName?: string;
-            downloadUrl?: string;
-            publicUrl?: string;
         };
         RsDataListPostGenFileDto: {
             resultCode: string;
@@ -497,6 +503,38 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    item: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["PostGenFileDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+        };
+    };
     modify: {
         parameters: {
             query?: never;
@@ -507,9 +545,12 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody: {
+        requestBody?: {
             content: {
-                "application/json": components["schemas"]["PostCommentModifyReqBody"];
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
             };
         };
         responses: {
@@ -519,7 +560,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json;charset=utf-8": components["schemas"]["RsDataPostCommentDto"];
+                    "application/json;charset=utf-8": components["schemas"]["RsDataPostGenFileDto"];
                 };
             };
             /** @description Bad Request */
@@ -565,7 +606,75 @@ export interface operations {
             };
         };
     };
-    item: {
+    modify_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PostCommentModifyReqBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["RsDataPostCommentDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+        };
+    };
+    delete_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+        };
+    };
+    item_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -596,7 +705,7 @@ export interface operations {
             };
         };
     };
-    modify_1: {
+    modify_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -631,7 +740,7 @@ export interface operations {
             };
         };
     };
-    delete_1: {
+    delete_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -1009,70 +1118,6 @@ export interface operations {
                 };
                 content: {
                     "application/json;charset=utf-8": components["schemas"]["PostGenFileDto"][];
-                };
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json;charset=utf-8": components["schemas"]["RsDataEmpty"];
-                };
-            };
-        };
-    };
-    item_1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                postId: number;
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json;charset=utf-8": components["schemas"]["PostGenFileDto"];
-                };
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json;charset=utf-8": components["schemas"]["RsDataEmpty"];
-                };
-            };
-        };
-    };
-    delete_2: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                postId: number;
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json;charset=utf-8": components["schemas"]["RsDataEmpty"];
                 };
             };
             /** @description Bad Request */
