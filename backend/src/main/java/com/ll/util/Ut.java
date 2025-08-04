@@ -370,6 +370,12 @@ public class Ut {
                     .findFirst()
                     .orElse("");
         }
+
+        public static String withNewExt(String fileName, String fileExt) {
+            return fileName.contains(".")
+                    ? fileName.substring(0, fileName.lastIndexOf(".") + 1) + fileExt
+                    : fileName + "." + fileExt;
+        }
     }
 
     public static class cmd {

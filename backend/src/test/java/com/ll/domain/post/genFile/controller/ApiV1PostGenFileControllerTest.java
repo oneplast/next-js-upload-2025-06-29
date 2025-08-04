@@ -258,4 +258,58 @@ class ApiV1PostGenFileControllerTest {
 
         Ut.file.mv(copyFilePath, originalFilePath);
     }
+
+    @Test
+    @DisplayName("파일 수정")
+    @WithUserDetails("user4")
+    void t6() throws Exception {
+        PostGenFile postGenFile = postService.findById(9).get().getGenFileById(1).get();
+
+        String originFilePath = postGenFile.getFilePath();
+        String copyFilePath = AppConfig.getTempDirPath() + "/copy_" + postGenFile.getFileName();
+        Ut.file.copy(originFilePath, copyFilePath);
+
+        String newFilePath = SampleResource.IMG_JPG_SAMPLE1.makeCopy();
+
+        ResultActions resultActions = mvc
+                .perform(
+                        multipart("/api/v1/posts/9/genFiles/1")
+                                .file(new MockMultipartFile("file",
+                                        SampleResource.IMG_JPG_SAMPLE1.getOriginalFileName(),
+                                        SampleResource.IMG_JPG_SAMPLE1.getContentType(),
+                                        new FileInputStream(newFilePath))
+                                )
+                                .with(request -> {
+                                    request.setMethod("PUT");
+                                    return request;
+                                })
+                ).andDo(print());
+
+        resultActions
+                .andExpect(handler().handlerType(ApiV1PostGenFileController.class))
+                .andExpect(handler().methodName("modify"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("200-1"))
+                .andExpect(jsonPath("$.msg").value("1번 파일이 수정되었습니다."))
+                .andExpect(jsonPath("$.data.id").value(postGenFile.getId()))
+                .andExpect(jsonPath("$.data.createDate").isString())
+                .andExpect(jsonPath("$.data.modifyDate").isString())
+                .andExpect(jsonPath("$.data.postId").value(9))
+                .andExpect(jsonPath("$.data.typeCode").value(postGenFile.getTypeCode().name()))
+                .andExpect(
+                        jsonPath("$.data.fileExtTypeCode").value(SampleResource.IMG_JPG_SAMPLE1.getFileExtTypeCode()))
+                .andExpect(
+                        jsonPath("$.data.fileExtType2Code").value(SampleResource.IMG_JPG_SAMPLE1.getFileExtType2Code()))
+                .andExpect(jsonPath("$.data.fileSize").isNumber())
+                .andExpect(jsonPath("$.data.fileNo").value(1))
+                .andExpect(jsonPath("$.data.fileExt").value(SampleResource.IMG_JPG_SAMPLE1.getFileExt()))
+                .andExpect(jsonPath("$.data.fileDateDir").isString())
+                .andExpect(
+                        jsonPath("$.data.originalFileName").value(SampleResource.IMG_JPG_SAMPLE1.getOriginalFileName()))
+                .andExpect(jsonPath("$.data.downloadUrl").isString())
+                .andExpect(jsonPath("$.data.publicUrl").isString())
+                .andExpect(jsonPath("$.data.fileName").isString());
+
+        Ut.file.mv(copyFilePath, originFilePath);
+    }
 }
