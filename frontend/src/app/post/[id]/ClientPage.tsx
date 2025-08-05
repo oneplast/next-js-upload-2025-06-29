@@ -52,7 +52,8 @@ export default function ClientPage({
                 alt={post.authorName}
                 width={40}
                 height={40}
-                className="rounded-full ring-2 ring-primary/10"
+                quality={100}
+                className="w-[40px] h-[40px] object-cover rounded-full ring-2 ring-primary/10"
               />
               <div>
                 <p className="text-sm font-medium text-foreground">

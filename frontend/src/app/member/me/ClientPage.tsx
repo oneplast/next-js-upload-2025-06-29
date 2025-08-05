@@ -29,10 +29,10 @@ export default function ClientPage() {
             <Image
               src={loginMember.profileImgUrl}
               alt={loginMember.nickname}
-              width={80}
-              height={80}
+              width={100}
+              height={100}
               quality={100}
-              className="rounded-full ring-2 ring-primary/10"
+              className="w-[100px] h-[100px] object-cover rounded-full ring-2 ring-primary/10"
             />
             <div className="text-xl font-medium">{loginMember.nickname}</div>
           </div>

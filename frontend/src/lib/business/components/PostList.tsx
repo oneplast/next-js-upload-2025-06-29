@@ -254,7 +254,8 @@ export default function PostList({
                           alt={item.authorName}
                           width={40}
                           height={40}
-                          className="rounded-full ring-2 ring-primary/10"
+                          quality={100}
+                          className="w-[40px] h-[40px] object-cover rounded-full ring-2 ring-primary/10"
                         />
                       </div>
                       <div className="flex-1 min-w-0">

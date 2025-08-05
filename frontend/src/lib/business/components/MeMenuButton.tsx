@@ -23,7 +23,7 @@ export default function MeMenuButton() {
       <DropdownMenuTrigger asChild>
         <Button variant="link">
           <Image
-            className="rounded-full"
+            className="w-[32px] h-[32px] object-cover rounded-full w-[32px] h-[32px] object-cover"
             src={loginMember.profileImgUrl}
             alt={loginMember.nickname}
             width={32}
