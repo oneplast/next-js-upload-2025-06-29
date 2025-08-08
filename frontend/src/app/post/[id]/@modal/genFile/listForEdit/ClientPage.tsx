@@ -38,6 +38,10 @@ export default function ClientPage({
     }
   }, [router]);
 
+  const attachmentGenFiles = genFiles.filter(
+    (genFile) => genFile.typeCode === "attachment",
+  );
+
   return (
     <Dialog
       open
@@ -52,52 +56,51 @@ export default function ClientPage({
         </DialogHeader>
 
         <div className="grid gap-6">
-          {genFiles
-            .filter((genFile) => genFile.typeCode === "attachment")
-            .map((genFile) => (
-              <div key={genFile.id} className="grid gap-2">
-                <Button variant="link" asChild className="justify-start">
-                  <a
-                    href={genFile.downloadUrl}
-                    className="flex items-center gap-2"
-                  >
-                    <Download />
+          {attachmentGenFiles.length == 0 && (
+            <div className="text-center text-sm text-gray-500">
+              첨부 파일이 없습니다.
+            </div>
+          )}
+          {attachmentGenFiles.map((genFile) => (
+            <div key={genFile.id} className="grid gap-2">
+              <Button variant="link" asChild className="justify-start">
+                <a
+                  href={genFile.downloadUrl}
+                  className="flex items-center gap-2"
+                >
+                  <Download />
 
-                    <span>
-                      {genFile.originalFileName}
-                      <br />({getFileSizeHr(genFile.fileSize ?? 0)}) 다운로드
-                    </span>
-                  </a>
+                  <span>
+                    {genFile.originalFileName}
+                    <br />({getFileSizeHr(genFile.fileSize ?? 0)}) 다운로드
+                  </span>
+                </a>
+              </Button>
+
+              <div className="flex flex-wrap">
+                <Button variant="link" className="justify-start" asChild>
+                  <Link href={`/post/${post.id}/genFile/${genFile.id}/preview`}>
+                    <Eye />
+                    <span>미리보기</span>
+                  </Link>
                 </Button>
 
-                <div className="flex flex-wrap">
-                  <Button variant="link" className="justify-start" asChild>
-                    <Link
-                      href={`/post/${post.id}/genFile/${genFile.id}/preview`}
-                    >
-                      <Eye />
-                      <span>미리보기</span>
-                    </Link>
-                  </Button>
+                <Button variant="link" className="justify-start" asChild>
+                  <Link href={`/post/${post.id}/genFile/${genFile.id}/edit`}>
+                    <Pencil />
+                    <span>수정</span>
+                  </Link>
+                </Button>
 
-                  <Button variant="link" className="justify-start" asChild>
-                    <Link href={`/post/${post.id}/genFile/${genFile.id}/edit`}>
-                      <Pencil />
-                      <span>수정</span>
-                    </Link>
-                  </Button>
-
-                  <Button variant="link" className="justify-start" asChild>
-                    <Link
-                      href={`/post/${post.id}/genFile/${genFile.id}/delete`}
-                    >
-                      <Trash />
-                      <span>삭제</span>
-                    </Link>
-                  </Button>
-                </div>
+                <Button variant="link" className="justify-start" asChild>
+                  <Link href={`/post/${post.id}/genFile/${genFile.id}/delete`}>
+                    <Trash />
+                    <span>삭제</span>
+                  </Link>
+                </Button>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
 
         <DialogFooter className="gap-2">
