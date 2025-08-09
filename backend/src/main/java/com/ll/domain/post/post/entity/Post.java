@@ -236,22 +236,23 @@ public class Post extends BaseTime {
         genFiles.remove(postGenFile);
     }
 
-    public void modifyGenFile(PostGenFile postGenFile, String filePath) {
-        processGenFile(postGenFile, postGenFile.getTypeCode(), postGenFile.getFileNo(), filePath);
+    public PostGenFile modifyGenFile(PostGenFile postGenFile, String filePath) {
+        return processGenFile(postGenFile, postGenFile.getTypeCode(), postGenFile.getFileNo(), filePath);
     }
 
-    public void modifyGenFile(PostGenFile.TypeCode typeCode, int fileNo, String filePath) {
-        getGenFileByTypeCodeAndFileNo(typeCode, fileNo)
-                .ifPresent(postGenFile -> modifyGenFile(postGenFile, filePath));
+    public PostGenFile modifyGenFile(PostGenFile.TypeCode typeCode, int fileNo, String filePath) {
+        PostGenFile postGenFile = getGenFileByTypeCodeAndFileNo(typeCode, fileNo).get();
+
+        return modifyGenFile(postGenFile, filePath);
     }
 
-    public void putGenFile(PostGenFile.TypeCode typeCode, int fileNo, String filepath) {
+    public PostGenFile putGenFile(PostGenFile.TypeCode typeCode, int fileNo, String filepath) {
         Optional<PostGenFile> opPostGenFile = getGenFileByTypeCodeAndFileNo(typeCode, fileNo);
 
         if (opPostGenFile.isPresent()) {
-            modifyGenFile(typeCode, fileNo, filepath);
+            return modifyGenFile(typeCode, fileNo, filepath);
         } else {
-            addGenFile(typeCode, fileNo, filepath);
+            return addGenFile(typeCode, fileNo, filepath);
         }
     }
 

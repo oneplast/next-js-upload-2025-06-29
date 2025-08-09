@@ -5,6 +5,7 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 import com.ll.domain.member.member.entity.Member;
 import com.ll.domain.post.genFile.dto.PostGenFileDto;
 import com.ll.domain.post.genFile.entity.PostGenFile;
+import com.ll.domain.post.genFile.entity.PostGenFile.TypeCode;
 import com.ll.domain.post.post.entity.Post;
 import com.ll.domain.post.post.service.PostService;
 import com.ll.global.app.AppConfig;
@@ -147,5 +148,38 @@ public class ApiV1PostGenFileController {
                 "%d번 파일이 수정되었습니다.".formatted(id),
                 new PostGenFileDto(postGenFile)
         );
+    }
+
+    @PutMapping(value = "/{typeCode}/{fileNo}", consumes = MULTIPART_FORM_DATA_VALUE)
+    @Transactional
+    @Operation(summary = "수정")
+    public RsData<PostGenFileDto> modify(
+            @PathVariable long postId,
+            @PathVariable PostGenFile.TypeCode typeCode,
+            @PathVariable int fileNo,
+            @NonNull @RequestPart("file") MultipartFile file
+    ) {
+        if (typeCode == TypeCode.thumbnail && fileNo > 1) {
+            throw new ServiceException("400-1", "썸네일은 1개만 등록할 수 있습니다.");
+        }
+
+        Post post = postService.findById(postId).orElseThrow(
+                () -> new ServiceException("404-1", "%d번 글은 존재하지 않습니다.".formatted(postId))
+        );
+
+        String filePath = Ut.file.toFile(file, AppConfig.getTempDirPath());
+
+        if (typeCode == TypeCode.thumbnail && !Ut.file.getFileExtTypeCodeFromFilePath(filePath).equals("img")) {
+            Ut.file.rm(filePath);
+
+            throw new ServiceException("400-2", "썸네일은 이미지 파일만 등록할 수 있습니다.");
+        }
+
+        PostGenFile postGenFile = post.putGenFile(typeCode, fileNo, filePath);
+
+        postService.flush();
+
+        return new RsData<>("200-1", "%d번 파일이 수정되었습니다.".formatted(postGenFile.getId()),
+                new PostGenFileDto(postGenFile));
     }
 }

@@ -376,6 +376,12 @@ public class Ut {
                     ? fileName.substring(0, fileName.lastIndexOf(".") + 1) + fileExt
                     : fileName + "." + fileExt;
         }
+
+        public static String getFileExtTypeCodeFromFilePath(String filePath) {
+            String ext = getFileExt(filePath);
+
+            return getFileExtTypeCodeFromFileExt(ext);
+        }
     }
 
     public static class cmd {
