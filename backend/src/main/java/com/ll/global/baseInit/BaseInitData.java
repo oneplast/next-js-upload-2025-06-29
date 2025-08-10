@@ -2,6 +2,7 @@ package com.ll.global.baseInit;
 
 import com.ll.domain.member.member.entity.Member;
 import com.ll.domain.member.member.service.MemberService;
+import com.ll.domain.post.genFile.entity.PostGenFile;
 import com.ll.domain.post.genFile.entity.PostGenFile.TypeCode;
 import com.ll.domain.post.post.entity.Post;
 import com.ll.domain.post.post.service.PostService;
@@ -147,7 +148,8 @@ public class BaseInitData {
         post9.addGenFile(TypeCode.thumbnail, genFile3FilePath);
 
         String newGenFile3FilePath = SampleResource.IMG_JPG_SAMPLE4.makeCopy();
-        post9.modifyGenFile(TypeCode.thumbnail, 1, newGenFile3FilePath);
+        PostGenFile postGenFile3 = post9.modifyGenFile(TypeCode.thumbnail, 1, newGenFile3FilePath);
+        post9.setThumbnailGenFile(postGenFile3);
 
         Post post10 = postService.write(memberUser4, "테니스 하실 분있나요?", "테니스 강력 추천합니다.", true, true);
 

@@ -34,6 +34,9 @@ public class PostDto {
     @NonNull
     private final boolean listed;
 
+    @NonNull
+    private final String thumbnailImgUrl;
+
     public PostDto(Post post) {
         this.id = post.getId();
         this.createDate = post.getCreateDate();
@@ -44,5 +47,6 @@ public class PostDto {
         this.title = post.getTitle();
         this.published = post.isPublished();
         this.listed = post.isListed();
+        this.thumbnailImgUrl = post.getThumbnailImgUrlOrDefault();
     }
 }

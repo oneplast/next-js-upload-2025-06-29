@@ -50,6 +50,10 @@ public class Post extends BaseTime {
     @Builder.Default
     private List<PostGenFile> genFiles = new ArrayList<>();
 
+    // OneToOne 은 레이지 로딩이 안된다.
+    @ManyToOne(fetch = FetchType.LAZY)
+    private PostGenFile thumbnailGenFile;
+
     private boolean published;
 
     private boolean listed;
@@ -280,5 +284,11 @@ public class Post extends BaseTime {
 
     public boolean isTemp() {
         return !published && "임시글".equals(title);
+    }
+
+    public String getThumbnailImgUrlOrDefault() {
+        return Optional.ofNullable(thumbnailGenFile)
+                .map(PostGenFile::getPublicUrl)
+                .orElse("https://placehold.co/1200x1200?text=POST " + getId());
     }
 }

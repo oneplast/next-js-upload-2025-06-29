@@ -69,6 +69,7 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.authorId").value(post.getAuthor().getId()))
                 .andExpect(jsonPath("$.authorName").value(post.getAuthor().getName()))
                 .andExpect(jsonPath("$.authorProfileImgUrl").value(post.getAuthor().getProfileImgUrlOrDefault()))
+                .andExpect(jsonPath("$.thumbnailImgUrl").value(post.getThumbnailImgUrlOrDefault()))
                 .andExpect(jsonPath("$.title").value(post.getTitle()))
                 .andExpect(jsonPath("$.content").value(post.getContent()))
                 .andExpect(jsonPath("$.published").value(post.isPublished()))
@@ -132,6 +133,7 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.data.authorId").value(post.getAuthor().getId()))
                 .andExpect(jsonPath("$.data.authorName").value(post.getAuthor().getName()))
                 .andExpect(jsonPath("$.data.authorProfileImgUrl").value(post.getAuthor().getProfileImgUrlOrDefault()))
+                .andExpect(jsonPath("$.data.thumbnailImgUrl").value(post.getThumbnailImgUrlOrDefault()))
                 .andExpect(jsonPath("$.data.title").value(post.getTitle()))
                 .andExpect(jsonPath("$.data.published").value(post.isPublished()))
                 .andExpect(jsonPath("$.data.listed").value(post.isListed()));
@@ -232,6 +234,7 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.data.authorId").value(post.getAuthor().getId()))
                 .andExpect(jsonPath("$.data.authorName").value(post.getAuthor().getName()))
                 .andExpect(jsonPath("$.data.authorProfileImgUrl").value(post.getAuthor().getProfileImgUrlOrDefault()))
+                .andExpect(jsonPath("$.data.thumbnailImgUrl").value(post.getThumbnailImgUrlOrDefault()))
                 .andExpect(jsonPath("$.data.title").value("축구 하실 분 계신가요?"))
                 .andExpect(jsonPath("$.data.published").value(post.isPublished()))
                 .andExpect(jsonPath("$.data.listed").value(post.isListed()));
@@ -424,6 +427,7 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.authorId").value(post.getAuthor().getId()))
                 .andExpect(jsonPath("$.authorName").value(post.getAuthor().getName()))
                 .andExpect(jsonPath("$.authorProfileImgUrl").value(post.getAuthor().getProfileImgUrlOrDefault()))
+                .andExpect(jsonPath("$.thumbnailImgUrl").value(post.getThumbnailImgUrlOrDefault()))
                 .andExpect(jsonPath("$.title").value(post.getTitle()))
                 .andExpect(jsonPath("$.content").value(post.getContent()))
                 .andExpect(jsonPath("$.published").value(post.isPublished()))
@@ -507,6 +511,8 @@ public class ApiV1PostControllerTest {
                     .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(post.getAuthor().getName()))
                     .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(
                             post.getAuthor().getProfileImgUrlOrDefault()))
+                    .andExpect(jsonPath("$.items[%d].thumbnailImgUrl".formatted(i)).value(
+                            post.getThumbnailImgUrlOrDefault()))
                     .andExpect(jsonPath("$.items[%d].title".formatted(i)).value(post.getTitle()))
                     .andExpect(jsonPath("$.items[%d].content".formatted(i)).doesNotExist())
                     .andExpect(jsonPath("$.items[%d].published".formatted(i)).value(post.isPublished()))
@@ -548,6 +554,8 @@ public class ApiV1PostControllerTest {
                     .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(post.getAuthor().getName()))
                     .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(
                             post.getAuthor().getProfileImgUrlOrDefault()))
+                    .andExpect(jsonPath("$.items[%d].thumbnailImgUrl".formatted(i)).value(
+                            post.getThumbnailImgUrlOrDefault()))
                     .andExpect(jsonPath("$.items[%d].title".formatted(i)).value(post.getTitle()))
                     .andExpect(jsonPath("$.items[%d].content".formatted(i)).doesNotExist())
                     .andExpect(jsonPath("$.items[%d].published".formatted(i)).value(post.isPublished()))
@@ -589,6 +597,8 @@ public class ApiV1PostControllerTest {
                     .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(post.getAuthor().getName()))
                     .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(
                             post.getAuthor().getProfileImgUrlOrDefault()))
+                    .andExpect(jsonPath("$.items[%d].thumbnailImgUrl".formatted(i)).value(
+                            post.getThumbnailImgUrlOrDefault()))
                     .andExpect(jsonPath("$.items[%d].title".formatted(i)).value(post.getTitle()))
                     .andExpect(jsonPath("$.items[%d].content".formatted(i)).doesNotExist())
                     .andExpect(jsonPath("$.items[%d].published".formatted(i)).value(post.isPublished()))
@@ -634,6 +644,8 @@ public class ApiV1PostControllerTest {
                     .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(post.getAuthor().getName()))
                     .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(
                             post.getAuthor().getProfileImgUrlOrDefault()))
+                    .andExpect(jsonPath("$.items[%d].thumbnailImgUrl".formatted(i)).value(
+                            post.getThumbnailImgUrlOrDefault()))
                     .andExpect(jsonPath("$.items[%d].title".formatted(i)).value(post.getTitle()))
                     .andExpect(jsonPath("$.items[%d].content".formatted(i)).doesNotExist())
                     .andExpect(jsonPath("$.items[%d].published".formatted(i)).value(post.isPublished()))
@@ -681,6 +693,8 @@ public class ApiV1PostControllerTest {
                     .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(post.getAuthor().getName()))
                     .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(
                             post.getAuthor().getProfileImgUrlOrDefault()))
+                    .andExpect(jsonPath("$.items[%d].thumbnailImgUrl".formatted(i)).value(
+                            post.getThumbnailImgUrlOrDefault()))
                     .andExpect(jsonPath("$.items[%d].title".formatted(i)).value(post.getTitle()))
                     .andExpect(jsonPath("$.items[%d].content".formatted(i)).doesNotExist())
                     .andExpect(jsonPath("$.items[%d].published".formatted(i)).value(post.isPublished()))
@@ -727,6 +741,8 @@ public class ApiV1PostControllerTest {
                     .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(post.getAuthor().getName()))
                     .andExpect(jsonPath("$.items[%d].authorProfileImgUrl".formatted(i)).value(
                             post.getAuthor().getProfileImgUrlOrDefault()))
+                    .andExpect(jsonPath("$.items[%d].thumbnailImgUrl".formatted(i)).value(
+                            post.getThumbnailImgUrlOrDefault()))
                     .andExpect(jsonPath("$.items[%d].title".formatted(i)).value(post.getTitle()))
                     .andExpect(jsonPath("$.items[%d].content".formatted(i)).doesNotExist())
                     .andExpect(jsonPath("$.items[%d].published".formatted(i)).value(post.isPublished()))
@@ -789,6 +805,7 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.data.authorId").isNumber())
                 .andExpect(jsonPath("$.data.authorName").isString())
                 .andExpect(jsonPath("$.data.authorProfileImgUrl").isString())
+                .andExpect(jsonPath("$.data.thumbnailImgUrl").isString())
                 .andExpect(jsonPath("$.data.title").isString())
                 .andExpect(jsonPath("$.data.published").isBoolean())
                 .andExpect(jsonPath("$.data.listed").isBoolean());
@@ -820,6 +837,7 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.data.authorId").isNumber())
                 .andExpect(jsonPath("$.data.authorName").isString())
                 .andExpect(jsonPath("$.data.authorProfileImgUrl").isString())
+                .andExpect(jsonPath("$.data.thumbnailImgUrl").isString())
                 .andExpect(jsonPath("$.data.title").isString())
                 .andExpect(jsonPath("$.data.published").isBoolean())
                 .andExpect(jsonPath("$.data.listed").isBoolean());
