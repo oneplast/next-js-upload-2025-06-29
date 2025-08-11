@@ -1,5 +1,6 @@
 package com.ll.domain.post.genFile.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -368,5 +369,59 @@ class ApiV1PostGenFileControllerTest {
                 .andExpect(jsonPath("$.data.fileName").value(postGenFile.getFileName()));
 
         Ut.file.mv(copyFilePath, originalFilePath);
+    }
+
+    @Test
+    @DisplayName("썸네일 이미지가 등록되면 해당 글에서도 직접 참조가 가능해야 한다.")
+    @WithUserDetails("user4")
+    void t8() throws Exception {
+        String newFilePath = SampleResource.IMG_JPG_SAMPLE1.makeCopy();
+        ;
+
+        ResultActions resultActions = mvc
+                .perform(
+                        multipart("/api/v1/posts/5/genFiles/" + TypeCode.thumbnail + "/1")
+                                .file(new MockMultipartFile("file",
+                                        SampleResource.IMG_JPG_SAMPLE1.getOriginalFileName(),
+                                        SampleResource.IMG_JPG_SAMPLE1.getContentType(),
+                                        new FileInputStream(newFilePath)))
+                                .with(request -> {
+                                    request.setMethod("PUT");
+                                    return request;
+                                })
+                )
+                .andDo(print());
+
+        PostGenFile postGenFile = postService.findById(5).get().getGenFileByTypeCodeAndFileNo(TypeCode.thumbnail, 1)
+                .get();
+
+        resultActions
+                .andExpect(handler().handlerType(ApiV1PostGenFileController.class))
+                .andExpect(handler().methodName("modify"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("200-1"))
+                .andExpect(jsonPath("$.msg").value("%d번 파일이 생성되었습니다.".formatted(postGenFile.getId())))
+                .andExpect(jsonPath("$.data.id").value(postGenFile.getId()))
+                .andExpect(jsonPath("$.data.createDate").value(
+                        Matchers.startsWith(postGenFile.getCreateDate().toString().substring(0, 20))))
+                .andExpect(jsonPath("$.data.modifyDate").value(
+                        Matchers.startsWith(postGenFile.getModifyDate().toString().substring(0, 20))))
+                .andExpect(jsonPath("$.data.postId").value(postGenFile.getPost().getId()))
+                .andExpect(jsonPath("$.data.typeCode").value(postGenFile.getTypeCode().name()))
+                .andExpect(jsonPath("$.data.fileExtTypeCode").value(postGenFile.getFileExtTypeCode()))
+                .andExpect(jsonPath("$.data.fileExtType2Code").value(postGenFile.getFileExtType2Code()))
+                .andExpect(jsonPath("$.data.fileSize").value(postGenFile.getFileSize()))
+                .andExpect(jsonPath("$.data.fileNo").value(postGenFile.getFileNo()))
+                .andExpect(jsonPath("$.data.fileExt").value(postGenFile.getFileExt()))
+                .andExpect(jsonPath("$.data.fileDateDir").value(postGenFile.getFileDateDir()))
+                .andExpect(jsonPath("$.data.originalFileName").value(postGenFile.getOriginalFileName()))
+                .andExpect(jsonPath("$.data.downloadUrl").value(postGenFile.getDownloadUrl()))
+                .andExpect(jsonPath("$.data.publicUrl").value(postGenFile.getPublicUrl()))
+                .andExpect(jsonPath("$.data.fileName").value(postGenFile.getFileName()));
+
+        assertEquals(postGenFile.getPost().getThumbnailGenFile(), postGenFile);
+        assertEquals(postGenFile.getPost().getThumbnailImgUrlOrDefault(), postGenFile.getPublicUrl());
+
+        Ut.file.rm(postGenFile.getFilePath());
     }
 }
