@@ -247,7 +247,17 @@ export default function PostList({
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-center space-x-4">
+                    <div>
+                      <Image
+                        src={item.thumbnailImgUrl}
+                        alt={item.title}
+                        width={400}
+                        height={400}
+                        quality={100}
+                        className="w-full aspect-[1/1] object-cover"
+                      />
+                    </div>
+                    <div className="mt-4 flex items-center space-x-4">
                       <div className="flex-shrink-0">
                         <Image
                           src={item.authorProfileImgUrl}

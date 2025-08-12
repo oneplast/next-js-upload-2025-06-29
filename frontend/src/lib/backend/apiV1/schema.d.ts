@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/api/v1/posts/{postId}/genFiles/{typeCode}/{fileNo}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** 수정 */
+        put: operations["modify"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/posts/{postId}/genFiles/{id}": {
         parameters: {
             query?: never;
@@ -14,7 +31,7 @@ export interface paths {
         /** 단건조회 */
         get: operations["item"];
         /** 수정 */
-        put: operations["modify"];
+        put: operations["modify_1"];
         post?: never;
         /** 삭제 */
         delete: operations["delete"];
@@ -32,7 +49,7 @@ export interface paths {
         };
         get?: never;
         /** 수정 */
-        put: operations["modify_1"];
+        put: operations["modify_2"];
         post?: never;
         /** 삭제 */
         delete: operations["delete_1"];
@@ -54,7 +71,7 @@ export interface paths {
          */
         get: operations["item_1"];
         /** 수정 */
-        put: operations["modify_2"];
+        put: operations["modify_3"];
         post?: never;
         /**
          * 삭제
@@ -377,6 +394,7 @@ export interface components {
             title: string;
             published: boolean;
             listed: boolean;
+            thumbnailImgUrl: string;
         };
         RsDataPostDto: {
             resultCode: string;
@@ -460,6 +478,7 @@ export interface components {
             title: string;
             published: boolean;
             listed: boolean;
+            thumbnailImgUrl: string;
             content: string;
             actorCanModify?: boolean;
             actorCanDelete?: boolean;
@@ -503,6 +522,46 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    modify: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+                typeCode: "attachment" | "thumbnail";
+                fileNo: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["RsDataPostGenFileDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=utf-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+        };
+    };
     item: {
         parameters: {
             query?: never;
@@ -535,7 +594,7 @@ export interface operations {
             };
         };
     };
-    modify: {
+    modify_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -606,7 +665,7 @@ export interface operations {
             };
         };
     };
-    modify_1: {
+    modify_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -705,7 +764,7 @@ export interface operations {
             };
         };
     };
-    modify_2: {
+    modify_3: {
         parameters: {
             query?: never;
             header?: never;
