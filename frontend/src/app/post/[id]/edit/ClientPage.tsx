@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import html2canvas from "html2canvas";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -30,11 +31,13 @@ import { Textarea } from "@/components/ui/textarea";
 const wrtieFormSchema = z.object({
   title: z
     .string()
+    .trim()
     .min(1, "제목을 입력해주세요.")
     .min(2, "제목은 2자 이상이어야 합니다.")
     .max(50, "제목은 50자 이하여야 합니다."),
   content: z
     .string()
+    .trim()
     .min(1, "내용을 입력해주세요.")
     .min(2, "내용은 2자 이상이어야 합니다.")
     .max(10_000_000, "내용은 1,000만자 이하여야 합니다."),
@@ -62,46 +65,129 @@ export default function ClientPage({
     },
   });
 
-  const onSubmit = async (data: WriteFormInputs) => {
-    const response = await client.PUT("/api/v1/posts/{id}", {
-      params: {
-        path: {
-          id: post.id,
-        },
-      },
-      body: {
-        title: data.title,
-        content: data.content,
-        published: data.published,
-        listed: data.listed,
-      },
+  const handleThumbnailUpload = async (content: string, postId: number) => {
+    const tempDiv = document.createElement("div");
+
+    Object.assign(tempDiv.style, {
+      width: "1200px",
+      height: "1200px",
+      position: "absolute",
+      left: "-9999px",
+      whiteSpace: "pre-wrap",
+      wordBreak: "break-word",
+      fontSize: "60px",
+      fontWeight: "500",
+      padding: "0 10px",
+      display: "flex",
+      flexWrap: "wrap",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "black",
     });
 
-    if (response.error) {
-      toast(response.error.msg);
-      return;
-    }
+    tempDiv.innerText = content;
+    document.body.appendChild(tempDiv);
 
-    toast(response.data.msg);
+    try {
+      const canvas = await html2canvas(tempDiv, {
+        width: 1200,
+        height: 1200,
+      });
 
-    // 파일 업로드 처리
-    if (data.attachment_0) {
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((blob) => resolve(blob!), "image/png", 1.0);
+      });
+
+      const file = new File([blob], `${postId}-thumbnail.png`, {
+        type: "image/png",
+        lastModified: Date.now(),
+      });
+
       const formData = new FormData();
 
-      for (const file of [...data.attachment_0].reverse())
-        formData.append("files", file);
+      formData.append("file", file);
 
-      const uploadResponse = await client.POST(
-        "/api/v1/posts/{postId}/genFiles/{typeCode}",
+      return await client.PUT(
+        "/api/v1/posts/{postId}/genFiles/{typeCode}/{fileNo}",
         {
           params: {
             path: {
-              postId: post.id,
-              typeCode: "attachment",
+              postId,
+              typeCode: "thumbnail",
+              fileNo: 1,
             },
           },
-          body: formData as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+          body: formData as any,
         },
+      );
+    } finally {
+      document.body.removeChild(tempDiv);
+    }
+  };
+
+  const handleAttachmentUpload = async (files: File[], postId: number) => {
+    const formData = new FormData();
+    files.forEach((file) => formData.append("files", file));
+
+    return await client.POST("/api/v1/posts/{postId}/genFiles/{typeCode}", {
+      params: {
+        path: {
+          postId,
+          typeCode: "attachment",
+        },
+      },
+      body: formData as any,
+    });
+  };
+
+  const onSubmit = async (data: WriteFormInputs) => {
+    // 데이터가 변경되었는지 확인
+    const isPostDataChanged =
+      data.title !== post.title ||
+      data.content !== post.content ||
+      data.published !== post.published ||
+      data.listed !== post.listed;
+
+    const isPostContentChanged = data.content !== post.content;
+
+    if (isPostDataChanged) {
+      const response = await client.PUT("/api/v1/posts/{id}", {
+        params: {
+          path: {
+            id: post.id,
+          },
+        },
+        body: {
+          title: data.title,
+          content: data.content,
+          published: data.published,
+          listed: data.listed,
+        },
+      });
+
+      if (response.error) {
+        toast(response.error.msg);
+        return;
+      }
+
+      toast(response.data.msg);
+
+      if (isPostContentChanged) {
+        const thumbnailResponse = await handleThumbnailUpload(
+          data.content,
+          post.id,
+        );
+
+        if (thumbnailResponse.error) {
+          toast(thumbnailResponse.error.msg);
+        }
+      }
+    }
+
+    if (data.attachment_0) {
+      const uploadResponse = await handleAttachmentUpload(
+        data.attachment_0,
+        post.id,
       );
 
       if (uploadResponse.error) {
@@ -203,6 +289,7 @@ export default function ClientPage({
                 <FormControl>
                   <Textarea
                     {...field}
+                    autoFocus
                     className="h-[calc(100dvh-520px)] min-h-[300px]"
                     placeholder={post.content}
                   />
