@@ -1,5 +1,7 @@
 package com.ll.util;
 
+import static java.time.format.DateTimeFormatter.ofPattern;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ll.global.app.AppConfig;
 import io.jsonwebtoken.Jwts;
@@ -24,6 +26,7 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.Key;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -405,6 +408,10 @@ public class Ut {
         public static String getCurrentDateFormatted(String pattern) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             return simpleDateFormat.format(new Date());
+        }
+
+        public static String patternOf(LocalDateTime date, String pattern) {
+            return date.format(ofPattern(pattern));
         }
     }
 
