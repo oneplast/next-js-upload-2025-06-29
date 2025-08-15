@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -157,7 +158,8 @@ public class ApiV1PostGenFileController {
             @PathVariable long postId,
             @PathVariable PostGenFile.TypeCode typeCode,
             @PathVariable int fileNo,
-            @NonNull @RequestPart("file") MultipartFile file
+            @NonNull @RequestPart("file") MultipartFile file,
+            @RequestParam(defaultValue = "") String metaStr
     ) {
         if (typeCode == TypeCode.thumbnail && fileNo > 1) {
             throw new ServiceException("400-1", "썸네일은 1개만 등록할 수 있습니다.");
@@ -167,7 +169,7 @@ public class ApiV1PostGenFileController {
                 () -> new ServiceException("404-1", "%d번 글은 존재하지 않습니다.".formatted(postId))
         );
 
-        String filePath = Ut.file.toFile(file, AppConfig.getTempDirPath());
+        String filePath = Ut.file.toFile(file, AppConfig.getTempDirPath(), metaStr);
 
         if (typeCode == TypeCode.thumbnail && !Ut.file.getFileExtTypeCodeFromFilePath(filePath).equals("img")) {
             Ut.file.rm(filePath);
