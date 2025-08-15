@@ -106,6 +106,7 @@ export default function ClientPage({
       const formData = new FormData();
 
       formData.append("file", file);
+      formData.append("metaStr", "darkInvertible=1");
 
       return await client.PUT(
         "/api/v1/posts/{postId}/genFiles/{typeCode}/{fileNo}",
