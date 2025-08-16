@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { components } from "@/lib/backend/apiV1/schema";
+import { cn } from "@/lib/utils";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,7 +33,7 @@ import {
 
 import { ListX, Lock, Search, X } from "lucide-react";
 
-import { getDateHr } from "../utils";
+import { getDateHr, getMetadataAttrValueAsNumberFromQueryStr } from "../utils";
 import PaginationType1Responsive from "./PaginationType1Responsive";
 
 interface PostListProps {
@@ -254,7 +255,14 @@ export default function PostList({
                         width={400}
                         height={400}
                         quality={100}
-                        className="w-full aspect-[1/1] object-cover"
+                        className={cn(
+                          "rounded-md aspect-square w-full",
+                          getMetadataAttrValueAsNumberFromQueryStr(
+                            item.thumbnailImgUrl,
+                            "darkInvertible",
+                            0,
+                          ) === 1 && "dark:invert",
+                        )}
                       />
                     </div>
                     <div className="mt-4 flex items-center space-x-4">

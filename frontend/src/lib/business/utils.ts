@@ -39,3 +39,22 @@ export function stripMarkdown(input: string) {
     .slice(0, 157)
     .replace(/(.{157}).*/, "$1...");
 }
+
+export function getMetadataAttrValueFromQueryStr(
+  url: string,
+  attr: string,
+  defaultValue: string,
+) {
+  const urlObj = new URL(url);
+  const searchParams = new URLSearchParams(urlObj.search);
+  return searchParams.get(attr) ?? defaultValue;
+}
+
+export function getMetadataAttrValueAsNumberFromQueryStr(
+  url: string,
+  attr: string,
+  defaultValue: number,
+) {
+  const value = getMetadataAttrValueFromQueryStr(url, attr, "");
+  return value.length > 0 ? parseInt(value) : defaultValue;
+}
