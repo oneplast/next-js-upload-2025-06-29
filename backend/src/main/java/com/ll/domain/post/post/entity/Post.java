@@ -296,6 +296,6 @@ public class Post extends BaseTime {
     public String getThumbnailImgUrlOrDefault() {
         return Optional.ofNullable(thumbnailGenFile)
                 .map(PostGenFile::getPublicUrl)
-                .orElse("https://placehold.co/1200x1200?text=POST " + getId());
+                .orElse("https://placehold.co/1200x1200?text=POST " + getId() + "&darkInvertible=1");
     }
 }
