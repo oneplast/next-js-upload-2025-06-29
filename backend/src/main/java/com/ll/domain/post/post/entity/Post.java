@@ -203,6 +203,10 @@ public class Post extends BaseTime {
             genFiles.add(genFile);
         }
 
+        if (isModify) {
+            Ut.file.rm(genFile.getFilePath());
+        }
+
         Ut.file.mv(filePath, genFile.getFilePath());
 
         return genFile;
