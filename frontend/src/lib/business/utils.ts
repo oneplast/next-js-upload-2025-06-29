@@ -58,3 +58,24 @@ export function getMetadataAttrValueAsNumberFromQueryStr(
   const value = getMetadataAttrValueFromQueryStr(url, attr, "");
   return value.length > 0 ? parseInt(value) : defaultValue;
 }
+
+export function getSummaryFromContent(content: string) {
+  let summary = content;
+
+  if (summary.startsWith("# 요약")) {
+    const startContent = summary.slice(4);
+    const endIndex = startContent.search(/(\n\n|\#|\r\n)/)
+
+    if (endIndex !== -1) {
+      summary = startContent.slice(4, endIndex).trim();
+      //각 줄의 시작 부분에서 '- ' 또는 '-'를 제거
+      summary = summary
+        .split("\n")
+        .map((line) => line.replace(/^-\s*/, ""))
+        .join("\n");
+    }
+  }
+
+  console.log(summary);
+  return summary;
+}
