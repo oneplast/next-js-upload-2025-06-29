@@ -90,7 +90,7 @@ export default function ClientPage({
 
     const summary = getSummaryFromContent(content);
 
-    tempDiv.innerText = summary;
+    tempDiv.innerText = summary || content;
     document.body.appendChild(tempDiv);
 
     try {

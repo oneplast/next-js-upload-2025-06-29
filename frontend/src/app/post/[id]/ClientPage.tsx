@@ -56,10 +56,10 @@ export default function ClientPage({
                 className="w-[40px] h-[40px] object-cover rounded-full ring-2 ring-primary/10"
               />
               <div>
-                <p className="text-sm font-medium text-foreground">
+                <div className="text-sm font-medium text-foreground">
                   {post.authorName}
-                </p>
-                <p className="text-xs text-muted-foreground">
+                </div>
+                <div className="text-sm text-muted-foreground">
                   {new Date(post.createDate).toLocaleString("ko-KR", {
                     year: "2-digit",
                     month: "2-digit",
@@ -67,7 +67,7 @@ export default function ClientPage({
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
-                </p>
+                </div>
               </div>
             </div>
             <div className="flex-grow"></div>
@@ -89,9 +89,9 @@ export default function ClientPage({
           <div className="whitespace-pre-line">{post.content}</div>
           <div>
             {post.createDate != post.modifyDate && (
-              <p className="text-xs text-muted-foreground">
+              <div className="mt-4 text-sm text-muted-foreground">
                 {getDateHr(post.modifyDate)}에 수정됨
-              </p>
+              </div>
             )}
           </div>
         </CardContent>

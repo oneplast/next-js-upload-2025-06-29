@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 
 import client from "@/lib/backend/client";
 
-import { stripMarkdown } from "@/lib/business/utils";
+import { getSummaryFromContent, stripMarkdown } from "@/lib/business/utils";
 
 import ClientPage from "./ClientPage";
 
@@ -40,9 +40,11 @@ export async function generateMetaData({
 
   const post = postResponse.data;
 
+  const summary = getSummaryFromContent(post.content);
+
   return {
     title: post.title,
-    description: stripMarkdown(post.content),
+    description: summary || stripMarkdown(post.content),
   };
 }
 

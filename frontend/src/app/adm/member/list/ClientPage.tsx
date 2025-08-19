@@ -252,12 +252,12 @@ export default function ClientPage({
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground">
+                        <div className="text-sm font-medium text-foreground">
                           {item.nickname}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
+                        </div>
+                        <div className="text-sm text-muted-foreground">
                           {getDateHr(item.createDate)}
-                        </p>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
