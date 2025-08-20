@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { components } from "@/lib/backend/apiV1/schema";
+import ToastUiEditorViewer from "@/lib/business/components/ToastUiEditorViewer";
 import { getDateHr, getFileSizeHr } from "@/lib/business/utils";
 
 import { LoginMemberContext } from "@/stores/auth/loginMember";
@@ -86,7 +87,7 @@ export default function ClientPage({
           </div>
         </CardHeader>
         <CardContent>
-          <div className="whitespace-pre-line">{post.content}</div>
+          <ToastUiEditorViewer initialValue={post.content} />
           <div>
             {post.createDate != post.modifyDate && (
               <div className="mt-4 text-sm text-muted-foreground">
