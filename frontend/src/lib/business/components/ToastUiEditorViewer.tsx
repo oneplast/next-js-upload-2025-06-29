@@ -4,6 +4,8 @@ import { forwardRef } from "react";
 
 import dynamic from "next/dynamic";
 
+import { ToastUiEditorViewerCoreProps } from "./ToastUiEditorViewerCore";
+
 const ToastUiEditorViewerCore = dynamic(
   () => import("./ToastUiEditorViewerCore"),
   {
@@ -12,9 +14,7 @@ const ToastUiEditorViewerCore = dynamic(
   },
 );
 
-interface ViewerProps {
-  initialValue: string;
-}
+type ViewerProps = ToastUiEditorViewerCoreProps;
 
 const ToastUiEditorViewer = forwardRef<any, ViewerProps>((props, ref) => {
   return <ToastUiEditorViewerCore ref={ref} {...props} />;

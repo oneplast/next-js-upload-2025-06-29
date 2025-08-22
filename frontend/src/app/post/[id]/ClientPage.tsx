@@ -2,6 +2,8 @@
 
 import { use } from "react";
 
+import { useTheme } from "next-themes";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -31,6 +33,7 @@ export default function ClientPage({
   post: components["schemas"]["PostWithContentDto"];
   genFiles: components["schemas"]["PostGenFileDto"][];
 }) {
+  const { resolvedTheme } = useTheme();
   const { loginMember, isAdmin } = use(LoginMemberContext);
 
   return (
@@ -87,7 +90,11 @@ export default function ClientPage({
           </div>
         </CardHeader>
         <CardContent>
-          <ToastUiEditorViewer initialValue={post.content} />
+          <ToastUiEditorViewer
+            key={resolvedTheme}
+            initialValue={post.content}
+            theme={resolvedTheme as "dark" | "light"}
+          />
           <div>
             {post.createDate != post.modifyDate && (
               <div className="mt-4 text-sm text-muted-foreground">
