@@ -6,7 +6,6 @@ import "@toast-ui/editor/dist/i18n/ko-kr";
 import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import { Viewer } from "@toast-ui/react-editor";
-import "prismjs/themes/prism.css";
 import { forwardRef } from "react";
 
 export interface ToastUiEditorViewerCoreProps {

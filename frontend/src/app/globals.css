@@ -118,8 +118,258 @@
     font-size: 1rem;
   }
 
-  html > body .toastui-editor-contents code {
-    font-family: inherit;
-    font-size: inherit;
+  html.light code[class*="language-"],
+  html.light pre[class*="language-"] {
+    color: black;
+    background: none;
+    text-shadow: 0 1px white;
+    font-size: 1em;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+  }
+
+  html.light pre[class*="language-"]::-moz-selection,
+  html.light pre[class*="language-"] ::-moz-selection,
+  html.light code[class*="language-"]::-moz-selection,
+  html.light code[class*="language-"] ::-moz-selection {
+    text-shadow: none;
+    background: #b3d4fc;
+  }
+
+  html.light pre[class*="language-"]::selection,
+  html.light pre[class*="language-"] ::selection,
+  html.light code[class*="language-"]::selection,
+  html.light code[class*="language-"] ::selection {
+    text-shadow: none;
+    background: #b3d4fc;
+  }
+
+  @media print {
+    html.light code[class*="language-"],
+    html.light pre[class*="language-"] {
+      text-shadow: none;
+    }
+  }
+
+  /* Code blocks */
+  html.light pre[class*="language-"] {
+    padding: 1em;
+    margin: 0.5em 0;
+    overflow: auto;
+  }
+
+  html.light :not(pre) > code[class*="language-"],
+  html.light pre[class*="language-"] {
+    background: #f5f2f0;
+  }
+
+  /* Inline code */
+  html.light :not(pre) > code[class*="language-"] {
+    padding: 0.1em;
+    border-radius: 0.3em;
+    white-space: normal;
+  }
+
+  html.light .token.comment,
+  html.light .token.prolog,
+  html.light .token.doctype,
+  html.light .token.cdata {
+    color: slategray;
+  }
+
+  html.light .token.punctuation {
+    color: #999;
+  }
+
+  html.light .token.namespace {
+    opacity: 0.7;
+  }
+
+  html.light .token.property,
+  html.light .token.tag,
+  html.light .token.boolean,
+  html.light .token.number,
+  html.light .token.constant,
+  html.light .token.symbol,
+  html.light .token.deleted {
+    color: #905;
+  }
+
+  html.light .token.selector,
+  html.light .token.attr-name,
+  html.light .token.string,
+  html.light .token.char,
+  html.light .token.builtin,
+  html.light .token.inserted {
+    color: #690;
+  }
+
+  html.light .token.operator,
+  html.light .token.entity,
+  html.light .token.url,
+  html.light .language-css .token.string,
+  html.light .style .token.string {
+    color: #9a6e3a;
+    /* This background color was intended by the author of this theme. */
+    background: hsla(0, 0%, 100%, 0.5);
+  }
+
+  html.light html.light .token.atrule,
+  html.light .token.attr-value,
+  html.light .token.keyword {
+    color: #07a;
+  }
+
+  html.light .token.function,
+  html.light .token.class-name {
+    color: #dd4a68;
+  }
+
+  html.light .token.regex,
+  html.light .token.important,
+  html.light .token.variable {
+    color: #e90;
+  }
+
+  html.light .token.important,
+  html.light .token.bold {
+    font-weight: bold;
+  }
+  html.light .token.italic {
+    font-style: italic;
+  }
+
+  html.light .token.entity {
+    cursor: help;
+  }
+
+  html.dark code[class*="language-"],
+  html.dark pre[class*="language-"] {
+    color: #f8f8f2;
+    background: none;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+    font-size: 1em;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+  }
+
+  /* Code blocks */
+  html.dark pre[class*="language-"] {
+    padding: 1em;
+    margin: 0.5em 0;
+    overflow: auto;
+    border-radius: 0.3em;
+  }
+
+  html.dark :not(pre) > code[class*="language-"],
+  html.dark pre[class*="language-"] {
+    background: #272822;
+  }
+
+  /* Inline code */
+  html.dark :not(pre) > code[class*="language-"] {
+    padding: 0.1em;
+    border-radius: 0.3em;
+    white-space: normal;
+  }
+
+  html.dark .token.comment,
+  html.dark .token.prolog,
+  html.dark .token.doctype,
+  html.dark .token.cdata {
+    color: #8292a2;
+  }
+
+  html.dark .token.punctuation {
+    color: #f8f8f2;
+  }
+
+  html.dark .token.namespace {
+    opacity: 0.7;
+  }
+
+  html.dark .token.property,
+  html.dark .token.tag,
+  html.dark .token.constant,
+  html.dark .token.symbol,
+  html.dark .token.deleted {
+    color: #f92672;
+  }
+
+  html.dark .token.boolean,
+  html.dark .token.number {
+    color: #ae81ff;
+  }
+
+  html.dark .token.selector,
+  html.dark .token.attr-name,
+  html.dark .token.string,
+  html.dark .token.char,
+  html.dark .token.builtin,
+  html.dark html.dark .token.inserted {
+    color: #a6e22e;
+  }
+
+  html.dark .token.operator,
+  html.dark .token.entity,
+  html.dark .token.url,
+  html.dark .language-css .token.string,
+  html.dark .style .token.string,
+  html.dark .token.variable {
+    color: #f8f8f2;
+  }
+
+  html.dark .token.atrule,
+  html.dark .token.attr-value,
+  html.dark .token.function,
+  html.dark .token.class-name {
+    color: #e6db74;
+  }
+
+  html.dark .token.keyword {
+    color: #66d9ef;
+  }
+
+  html.dark .token.regex,
+  html.dark .token.important {
+    color: #fd971f;
+  }
+
+  html.dark .token.important,
+  html.dark .token.bold {
+    font-weight: bold;
+  }
+  html.dark .token.italic {
+    font-style: italic;
+  }
+
+  html.dark .token.entity {
+    cursor: help;
   }
 }
