@@ -23,6 +23,7 @@ const ToastUiEditorViewerCore = forwardRef<any, ToastUiEditorViewerCoreProps>(
         ref={ref}
         initialValue={props.initialValue}
         language="ko-KR"
+        linkAttributes={{ target: "_blank" }}
         customHTMLRenderer={{
           htmlBlock: {
             iframe(node: any) {
