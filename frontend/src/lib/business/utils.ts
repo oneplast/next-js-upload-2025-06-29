@@ -94,3 +94,7 @@ export function filterObjectKeys(
     return filtered;
   }, {});
 }
+
+export function isExternalUrl(url: string) {
+  return url.startsWith("http") || url.startsWith("//");
+}
