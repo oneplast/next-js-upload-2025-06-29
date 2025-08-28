@@ -2,6 +2,7 @@
 
 // @ts-expect-error - 타입 정보 없음
 import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight-all";
+import umlPlugin from "@toast-ui/editor-plugin-uml";
 import "@toast-ui/editor/dist/i18n/ko-kr";
 import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
 import "@toast-ui/editor/dist/toastui-editor.css";
@@ -19,7 +20,15 @@ const ToastUiEditorViewerCore = forwardRef<any, ToastUiEditorViewerCoreProps>(
     return (
       <Viewer
         theme={props.theme}
-        plugins={[codeSyntaxHighlight]}
+        plugins={[
+          codeSyntaxHighlight,
+          [
+            umlPlugin,
+            {
+              rendererURL: "https://www.plantuml.com/plantuml/svg/",
+            },
+          ],
+        ]}
         ref={ref}
         initialValue={props.initialValue}
         language="ko-KR"
