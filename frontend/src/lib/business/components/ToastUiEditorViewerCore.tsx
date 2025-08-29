@@ -1,5 +1,6 @@
 "use client";
 
+import chart from "@toast-ui/editor-plugin-chart";
 // @ts-expect-error - 타입 정보 없음
 import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight-all";
 import umlPlugin from "@toast-ui/editor-plugin-uml";
@@ -22,6 +23,15 @@ const ToastUiEditorViewerCore = forwardRef<any, ToastUiEditorViewerCoreProps>(
         theme={props.theme}
         plugins={[
           codeSyntaxHighlight,
+          [
+            chart,
+            {
+              minWidth: 100,
+              maxWidth: 800,
+              minHeight: 100,
+              maxHeight: 400,
+            },
+          ],
           [
             umlPlugin,
             {
