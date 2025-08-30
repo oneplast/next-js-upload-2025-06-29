@@ -3,6 +3,8 @@
 import chart from "@toast-ui/editor-plugin-chart";
 // @ts-expect-error - 타입 정보 없음
 import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight-all";
+import tableMergedCellPlugin from "@toast-ui/editor-plugin-table-merged-cell";
+import "@toast-ui/editor-plugin-table-merged-cell/dist/toastui-editor-plugin-table-merged-cell.css";
 import umlPlugin from "@toast-ui/editor-plugin-uml";
 import "@toast-ui/editor/dist/i18n/ko-kr";
 import "@toast-ui/editor/dist/theme/toastui-editor-dark.css";
@@ -32,6 +34,7 @@ const ToastUiEditorViewerCore = forwardRef<any, ToastUiEditorViewerCoreProps>(
               maxHeight: 400,
             },
           ],
+          tableMergedCellPlugin,
           [
             umlPlugin,
             {
