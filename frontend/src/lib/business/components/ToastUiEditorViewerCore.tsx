@@ -14,6 +14,48 @@ import { forwardRef } from "react";
 
 import { filterObjectKeys, isExternalUrl } from "../utils";
 
+function hidePlugin() {
+  const toHTMLRenderers = {
+    hide(node: any) {
+      return [
+        { type: "openTag", tagName: "div", outerNewLine: true },
+        { type: "html", content: "" },
+        { type: "closeTag", tagName: "div", outerNewLine: true },
+      ];
+    },
+  };
+
+  return { toHTMLRenderers };
+}
+
+function pptPlugin() {
+  const toHTMLRenderers = {
+    ppt(node: any) {
+      return [
+        { type: "openTag", tagName: "div", outerNewLine: true },
+        { type: "html", content: "" },
+        { type: "closeTag", tagName: "div", outerNewLine: true },
+      ];
+    },
+  };
+
+  return { toHTMLRenderers };
+}
+
+function configPlugin() {
+  const toHTMLRenderers = {
+    config(node: any) {
+      return [
+        { type: "openTag", tagName: "div", outerNewLine: true },
+        { type: "html", content: "" },
+        { type: "closeTag", tagName: "div", outerNewLine: true },
+      ];
+    },
+  };
+
+  return { toHTMLRenderers };
+}
+
 export interface ToastUiEditorViewerCoreProps {
   initialValue: string;
   theme: "dark" | "light";
@@ -24,6 +66,9 @@ const ToastUiEditorViewerCore = forwardRef<any, ToastUiEditorViewerCoreProps>(
       <Viewer
         theme={props.theme}
         plugins={[
+          hidePlugin,
+          pptPlugin,
+          configPlugin,
           codeSyntaxHighlight,
           [
             chart,
