@@ -98,3 +98,14 @@ export function filterObjectKeys(
 export function isExternalUrl(url: string) {
   return url.startsWith("http") || url.startsWith("//");
 }
+
+export function getParamsFromUrl(url: string) {
+  if (!url.includes("?")) return {};
+
+  if (!url.startsWith("http")) url = `https://localhost/${url}`;
+
+  const urlObj = new URL(url);
+
+  const searchParams = new URLSearchParams(urlObj.search);
+  return Object.fromEntries(searchParams.entries());
+}
