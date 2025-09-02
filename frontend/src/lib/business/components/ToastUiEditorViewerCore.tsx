@@ -108,6 +108,75 @@ function codepenPlugin() {
   return { toHTMLRenderers };
 }
 
+function youtubePlugin() {
+  const toHTMLRenderers = {
+    youtube(node: any) {
+      const html = renderYoutube(node.literal);
+      return [
+        { type: "openTag", tagName: "div", outerNewLine: true },
+        { type: "html", content: html },
+        { type: "closeTag", tagName: "div", outerNewLine: true },
+      ];
+    },
+  };
+
+  function renderYoutube(url: string) {
+    url = url.replace("https://www.youtube.com/watch?v=", "");
+    url = url.replace("http://www.youtube.com/watch?v=", "");
+    url = url.replace("www.youtube.com/watch?v=", "");
+    url = url.replace("youtube.com/watch?v=", "");
+    url = url.replace("https://youtu.be/", "");
+    url = url.replace("http://youtu.be/", "");
+    url = url.replace("youtu.be/", "");
+
+    const urlParams = getParamsFromUrl(url);
+
+    const width = "100%";
+    const height = "100%";
+    const ratio = "aspect-[16/9]";
+    let marginLeft = "auto";
+
+    if (urlParams["margin-left"]) {
+      marginLeft = urlParams["margin-left"];
+    }
+
+    let marginRight = "auto";
+
+    if (urlParams["margin-right"]) {
+      marginRight = urlParams["margin-right"];
+    }
+
+    let youtubeId = url;
+
+    if (youtubeId.indexOf("?") !== -1) {
+      const pos = url.indexOf("?");
+      youtubeId = youtubeId.substring(0, pos);
+    }
+
+    return (
+      '<div style="max-width:' +
+      urlParams["max-width"] +
+      "px; margin-left:" +
+      marginLeft +
+      "; margin-right:" +
+      marginRight +
+      ';" class="' +
+      ratio +
+      ' relative my-4"><iframe class="absolute top-0 left-0 w-full" width="' +
+      width +
+      '" height="' +
+      height +
+      '" src="https://www.youtube.com/embed/' +
+      youtubeId +
+      '?autoplay=1&mute=1&fs=1" ' +
+      'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" ' +
+      'allowfullscreen="true"></iframe></div>'
+    );
+  }
+
+  return { toHTMLRenderers };
+}
+
 export interface ToastUiEditorViewerCoreProps {
   initialValue: string;
   theme: "dark" | "light";
@@ -118,6 +187,7 @@ const ToastUiEditorViewerCore = forwardRef<any, ToastUiEditorViewerCoreProps>(
       <Viewer
         theme={props.theme}
         plugins={[
+          youtubePlugin,
           codepenPlugin,
           hidePlugin,
           pptPlugin,
