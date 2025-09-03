@@ -842,4 +842,16 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.data.published").isBoolean())
                 .andExpect(jsonPath("$.data.listed").isBoolean());
     }
+
+    @Test
+    @DisplayName("1번글의 마지막 수정날짜가 2900-01-01T00:00:00 이후라면 조회, 아니라면 412")
+    void t27() throws Exception {
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/posts/1?lastModifyDateAfter=2900-01-01T00:00:00"))
+                .andDo(print());
+
+        resultActions
+                .andExpect(jsonPath("$.resultCode").value("412-1"))
+                .andExpect(jsonPath("$.msg").value("변경된 데이터가 없습니다."));
+    }
 }

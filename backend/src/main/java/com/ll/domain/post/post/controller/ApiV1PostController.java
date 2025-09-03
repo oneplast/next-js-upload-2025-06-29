@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,8 +109,13 @@ public class ApiV1PostController {
     @GetMapping("/{id}")
     @Operation(summary = "단건 조회", description = "비밀글은 작성자만 조회 가능")
     @Transactional(readOnly = true)
-    public PostWithContentDto item(@PathVariable long id) {
+    public PostWithContentDto item(@PathVariable long id,
+                                   @RequestParam(defaultValue = "") LocalDateTime lastModifyDateAfter) {
         Post post = postService.findById(id).get();
+
+        if (lastModifyDateAfter != null && !post.getModifyDate().isAfter(lastModifyDateAfter)) {
+            throw new ServiceException("412-1", "변경된 데이터가 없습니다.");
+        }
 
         if (!post.isPublished()) {
             Member actor = rq.getActor();
