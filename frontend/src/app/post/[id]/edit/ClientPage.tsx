@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import html2canvas from "html2canvas";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -58,6 +59,15 @@ export default function ClientPage({
 }) {
   const router = useRouter();
 
+  useEffect(() => {
+    const needToRefresh = window.sessionStorage.getItem("needToRefresh");
+
+    if (needToRefresh === "true") {
+      window.sessionStorage.removeItem("needToRefresh");
+      router.refresh();
+    }
+  }, []);
+
   const form = useForm<WriteFormInputs>({
     resolver: zodResolver(wrtieFormSchema),
     defaultValues: {
@@ -67,6 +77,15 @@ export default function ClientPage({
       listed: post.listed,
     },
   });
+
+  useEffect(() => {
+    form.reset({
+      title: post.title,
+      content: post.content,
+      published: post.published,
+      listed: post.listed,
+    });
+  }, [form, post]);
 
   const handleThumbnailUpload = async (content: string, postId: number) => {
     const tempDiv = document.createElement("div");
@@ -176,7 +195,17 @@ export default function ClientPage({
         return;
       }
 
-      toast(response.data.msg);
+      toast(response.data.msg, {
+        action: (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => router.push(`/post/${post.id}`)}
+          >
+            글 보기
+          </Button>
+        ),
+      });
 
       if (isPostContentChanged) {
         const thumbnailResponse = await handleThumbnailUpload(
@@ -203,14 +232,18 @@ export default function ClientPage({
 
       toast(uploadResponse.data.msg);
     }
-
-    router.replace("/post/list");
   };
 
   return (
     <div className="container mx-auto px-4">
       <h1 className="text-2xl font-bold my-4 flex items-center gap-2 justify-center">
-        {post.id}번 글 수정
+        <div className="flex-1" />
+        <span>{post.id}번 글 수정</span>
+        <div className="flex-1">
+          <Button variant="outline" asChild className="float-right">
+            <Link href={`/post/${post.id}/edit/monaco`}>VS CODE로 편집</Link>
+          </Button>
+        </div>
       </h1>
 
       <Form {...form}>

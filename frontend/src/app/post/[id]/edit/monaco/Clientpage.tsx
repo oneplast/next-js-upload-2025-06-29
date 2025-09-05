@@ -1,61 +1,126 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { toast } from "sonner";
+
+import { useTheme } from "next-themes";
+
+import client from "@/lib/backend/client";
 
 import { components } from "@/lib/backend/apiV1/schema";
+import MoncaoEditor from "@/lib/business/components/MonacoEditor";
+
+interface Config {
+  title?: string;
+  published?: boolean;
+  listed?: boolean;
+  [key: string]: string | boolean | undefined;
+}
+
+function parseConfig(content: string): {
+  title: string;
+  published: boolean;
+  listed: boolean;
+  content: string;
+} {
+  if (content.startsWith("$$config")) {
+    const configEndIndex = content.indexOf("$$", 2);
+
+    if (configEndIndex === -1) {
+      return {
+        title: "",
+        published: false,
+        listed: false,
+        content: content.trim(),
+      };
+    }
+
+    const configSection = content.substring(8, configEndIndex);
+    const mainContent = content.substring(configEndIndex + 4);
+
+    // config 파싱
+    const configLines = configSection.split("\n");
+    const config: Config = {};
+
+    configLines.forEach((line) => {
+      const [key, value] = line.split(": ").map((s) => s.trim());
+      if (key === "published" || key === "listed") {
+        config[key] = value === "true";
+      } else {
+        config[key] = value;
+      }
+    });
+
+    return {
+      title: config.title?.trim() || "",
+      published: config.published || false,
+      listed: config.listed || false,
+      content: mainContent.trim(),
+    };
+  }
+
+  // config 섹션이 없는 경우
+  return {
+    title: "",
+    published: false,
+    listed: false,
+    content: content.trim(),
+  };
+}
 
 export default function ClientPage({
   post,
 }: {
   post: components["schemas"]["PostWithContentDto"];
 }) {
-  const editorRef = useRef<HTMLDivElement>(null);
-  const monacoRef = useRef<any>(null);
+  const { resolvedTheme } = useTheme();
 
-  useEffect(() => {
-    if (typeof window === "undefined" || !editorRef.current) return;
+  const savePost = async (value: string) => {
+    try {
+      const { title, published, listed, content } = parseConfig(value.trim());
 
-    const initMonaco = () => {
-      window.require.config({
-        paths: {
-          vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs",
+      const response = await client.PUT("/api/v1/posts/{id}", {
+        params: {
+          path: {
+            id: post.id,
+          },
+        },
+        body: {
+          title: title,
+          content: content,
+          published: published,
+          listed: listed,
         },
       });
 
-      window.require(["vs/editor/editor.main"], () => {
-        monacoRef.current?.dispose();
+      if (response.error) {
+        toast(response.error.msg);
+        return;
+      }
 
-        monacoRef.current = window.monaco.editor.create(editorRef.current!, {
-          value: post.content,
-          language: "markdown",
-          theme: "vs-dark",
-          tabSize: 2,
-          mouseWheelZoom: true,
-          automaticLayout: true,
-          minimap: { enabled: false },
-          fontSize: 14,
-          wordWrap: "on",
-          lineNumbers: "on",
-        });
-      });
-    };
+      if (response.data) {
+        toast(response.data.msg);
+      }
 
-    if (window.require) {
-      initMonaco();
-    } else {
-      const script = document.createElement("script");
-      script.src =
-        "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js";
-      script.onload = initMonaco;
-      document.head.appendChild(script);
+      sessionStorage.setItem("needToRefresh", "true");
+    } catch {
+      toast("저장 실패");
     }
-
-    return () => monacoRef.current?.dispose();
-  }, []);
+  };
 
   return (
     <div className="flex-1 flex">
-      <div ref={editorRef} className="w-full" />
+      <MoncaoEditor
+        theme={resolvedTheme as "light" | "dark"}
+        initialValue={`$$config
+        title: ${post.title}
+        published: ${post.published}
+        listed: ${post.listed}
+        $$
+        
+        ${post.content || ""}`.trim()}
+        onSave={savePost}
+        className="flex-1 border"
+      />
     </div>
   );
 }
