@@ -51,10 +51,8 @@ dependencies {
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
 
-    implementation("org.apache.tika:tika-core:3.0.0")
+    implementation("org.apache.tika:tika-core:3.1.0")
 
-    implementation("com.twelvemonkeys.imageio:imageio-core:3.12.0")
-    implementation("com.twelvemonkeys.imageio:imageio-jpeg:3.12.0")
     implementation("com.twelvemonkeys.imageio:imageio-webp:3.12.0")
 }
 
